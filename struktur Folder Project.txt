@@ -1,0 +1,106 @@
+donasi-app/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/
+│   │   │   │   └── ...
+│   │   │   ├── Controller.php
+│   │   │   ├── AdminController.php
+│   │   │   ├── BeneficiaryController.php
+│   │   │   ├── DashboardController.php
+│   │   │   ├── DistributionController.php
+│   │   │   ├── DonationController.php
+│   │   │   ├── NotificationController.php
+│   │   │   ├── ProgramController.php
+│   │   │   ├── PublicController.php
+│   │   │   ├── ReportController.php
+│   │   │   └── RoleController.php
+│   │   ├── Middleware/
+│   │   │   ├── ...
+│   │   │   ├── CheckRole.php
+│   │   │   └── RedirectIfAuthenticated.php
+│   │   └── Requests/
+│   │       └── ...
+│   ├── Models/
+│   │   ├── Beneficiary.php
+│   │   ├── Distribution.php
+│   │   ├── Donation.php
+│   │   ├── Notification.php
+│   │   ├── Program.php
+│   │   ├── Role.php
+│   │   └── User.php
+│   ├── Providers/
+│   │   └── ...
+│   └── View/
+│       └── Components/
+│           └── ...
+├── database/
+│   ├── factories/
+│   │   └── ...
+│   ├── migrations/
+│   │   ├── 2024_01_01_000001_create_roles_table.php
+│   │   ├── 2024_01_01_000002_create_users_table.php
+│   │   ├── 2024_01_01_000003_create_programs_table.php
+│   │   ├── 2024_01_01_000004_create_donations_table.php
+│   │   ├── 2024_01_01_000005_create_beneficiaries_table.php
+│   │   ├── 2024_01_01_000006_create_distributions_table.php
+│   │   ├── 2024_01_01_000007_create_notifications_table.php
+│   │   └── 2024_01_01_000008_create_password_resets_table.php
+│   └── seeders/
+│       ├── DatabaseSeeder.php
+│       └── RoleSeeder.php
+├── public/
+│   ├── css/
+│   ├── js/
+│   └── storage/
+│       └── bukti_transfer/
+├── resources/
+│   ├── views/
+│   │   ├── auth/
+│   │   │   └── ...
+│   │   ├── components/
+│   │   ├── layouts/
+│   │   │   ├── app.blade.php
+│   │   │   ├── guest.blade.php
+│   │   │   └── sidebar.blade.php
+│   │   ├── admin/
+│   │   │   ├── users/
+│   │   │   ├── roles/
+│   │   │   ├── programs/
+│   │   │   ├── donations/
+│   │   │   ├── beneficiaries/
+│   │   │   ├── distributions/
+│   │   │   ├── notifications/
+│   │   │   └── dashboard.blade.php
+│   │   ├── public/
+│   │   │   ├── home.blade.php
+│   │   │   ├── program.blade.php
+│   │   │   ├── reports.blade.php
+│   │   │   ├── about.blade.php
+│   │   │   └── contact.blade.php
+│   │   └── donatur/
+│   │       ├── dashboard.blade.php
+│   │       ├── donations/
+│   │       └── notifications/
+│   └── lang/
+│       └── id/
+│           ├── auth.php
+│           ├── pagination.php
+│           ├── passwords.php
+│           └── validation.php
+├── routes/
+│   ├── api.php
+│   ├── channels.php
+│   ├── console.php
+│   └── web.php
+├── storage/
+│   └── app/
+│       └── public/
+│           └── bukti_transfer/
+├── tests/
+│   └── ...
+├── .env.example
+├── README.md
+├── composer.json
+├── package.json
+└── webpack.mix.js
