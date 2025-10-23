@@ -44,20 +44,17 @@ class NotificationController extends Controller
             ->with('success', 'Semua notifikasi ditandai sebagai telah dibaca.');
     }
 
-    public function deleteAllRead(Notification $notification)
+    public function deleteAllRead()
     {
-        if ($notification->user_id !== auth()->id()) {
-            abort(403);
-        }
+        // Hapus semua notifikasi milik user yang sudah dibaca
+        Notification::where('user_id', auth()->id())
+            ->where('status_baca', true)
+            ->delete();
 
-        $user = Auth::user();
-
-        // Hapus notifikasi yang status_baca-nya true
-        $deletedCount = $user->notifications()->where('status_baca', true)->delete();
-
-        return redirect()->route('notifications.index')
-            ->with('success', "Berhasil menghapus {$deletedCount} notifikasi yang sudah dibaca.");
+        return redirect()->back()
+            ->with('success', 'Semua notifikasi yang sudah dibaca berhasil dihapus.');
     }
+
 
     public function destroy(Notification $notification)
     {

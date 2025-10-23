@@ -55,33 +55,52 @@
                                     </td>
                                     <td>{{ $user->created_at->format('d M Y') }}</td>
                                     <td>
+                                        <!--TOMBOL LIHAT DETAIL -->
                                         <div class="btn-group" role="group">
                                             <a href="{{ route('users.show', $user->id) }}"
                                                 class="btn btn-sm btn-outline-info" title="Lihat Detail">
                                                 <i class="bi bi-eye"></i>
                                             </a>
+                                            <!--TOMBOL EDIT USER -->
                                             <a href="{{ route('users.edit', $user->id) }}"
-                                                class="btn btn-sm btn-outline-warning" title="Edit">
+                                                class="btn btn-sm
+                                                @if ($user->role->name === 'superadmin' && $user->id !== auth()->id()) btn-outline-secondary disabled
+                                                @else
+                                                btn-outline-warning @endif"
+                                                title="@if ($user->role->name === 'superadmin' && $user->id !== auth()->id()) Superadmin tidak dapat diedit
+                                                @else
+                                                Edit @endif"
+                                                @if ($user->role->name === 'superadmin' && $user->id !== auth()->id()) tabindex="-1" aria-disabled="true" @endif>
                                                 <i class="bi bi-pencil"></i>
                                             </a>
 
+                                            <!--TOMBOL DELETE USER -->
                                             @if ($user->id !== auth()->id())
                                                 <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')"
+                                                    style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                        title="Hapus">
+
+                                                    <button type="submit"
+                                                        class="btn btn-sm {{ $user->role->name === 'superadmin' ? 'btn-outline-secondary' : 'btn-outline-danger' }}"
+                                                        title="{{ $user->role->name === 'superadmin' ? 'Superadmin tidak dapat dihapus' : 'Hapus' }}"
+                                                        @if ($user->role->name === 'superadmin') disabled @endif>
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
-                                                <!-- tombol di setiap row -->
-                                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editProfileModal"
-                                                    data-user='@json($user)'>
+                                                <!--TOMBOL EDIT PROFIL USER -->
+                                                <button
+                                                    class="btn btn-sm {{ $user->role->name === 'superadmin' ? 'btn-outline-secondary' : 'btn-outline-primary' }}"
+                                                    data-bs-toggle="modal" data-bs-target="#editProfileModal"
+                                                    data-user='@json($user)'
+                                                    title="{{ $user->role->name === 'superadmin' ? 'Superadmin tidak dapat diedit' : 'Edit Profil' }}"
+                                                    @if ($user->role->name === 'superadmin') disabled @endif>
                                                     Edit Profil
                                                 </button>
                                             @endif
+
+
                                         </div>
                                     </td>
                                 </tr>

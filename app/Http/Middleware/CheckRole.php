@@ -20,6 +20,7 @@ class CheckRole
         $expandedRoles = [];
         foreach ($roles as $r) {
             $split = preg_split('/[|,]/', $r); // bisa pakai pemisah | atau ,
+            $split = array_map('trim', $split);
             $expandedRoles = array_merge($expandedRoles, $split);
         }
 
@@ -34,6 +35,6 @@ class CheckRole
         }
 
         // Jika bukan donatur, arahkan ke dashboard umum
-        return redirect('/dashboard')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+        return redirect('/dashboard')->with('error', 'Warning unauthenticated : Anda tidak memiliki akses ke halaman ini.');
     }
 }

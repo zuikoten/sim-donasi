@@ -72,14 +72,13 @@ Route::middleware(['auth'])->group(function () {
         // Donations
         Route::resource('donations', DonationController::class);
         Route::post('/donations/{donation}/verify', [DonationController::class, 'verify'])->name('donations.verify');
+
+        // Notifications
+        Route::resource('notifications', NotificationController::class)->only(['index', 'destroy']);
+        Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+        Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+        Route::delete('/notifications/read-all', [NotificationController::class, 'deleteAllRead'])->name('notifications.deleteAllRead');
     });
-
-    // Notifications
-    Route::resource('notifications', NotificationController::class)->only(['index', 'destroy']);
-    Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
-    Route::post('/notifications/delete-all-read', [NotificationController::class, 'deleteAllRead'])->name('notifications.deleteAllRead');
-
 
     // Programs
     Route::resource('programs', ProgramController::class);
@@ -120,7 +119,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/donations/create', [AdminDonationController::class, 'create'])->name('donations.create');
         Route::post('/donations/store', [AdminDonationController::class, 'store'])->name('donations.store');
     });
-
-    // AJAX search Donatur
-    Route::get('/search-donatur', [DonaturController::class, 'search'])->name('donatur.search');
 });
+
+// AJAX search Donatur
+Route::get('/search-donatur', [DonaturController::class, 'search'])->name('donatur.search');

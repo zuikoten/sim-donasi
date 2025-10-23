@@ -96,8 +96,9 @@
             </a>
         </li>
 
-        @if (Auth::user()->isSuperAdmin())
-            <!-- Awal Accordion Manajemen Pengguna -->
+
+        <!-- Awal Accordion Manajemen Pengguna -->
+        @if (Auth::user()->isSuperAdmin() || Auth::user()->isAdmin())
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('users*') || request()->is('roles*') ? 'active' : '' }}"
                     href="#" data-bs-toggle="collapse" data-bs-target="#manajemenPenggunaSubmenu" role="button"
@@ -115,17 +116,21 @@
                                 <i class="bi bi-circle"></i> Pengguna
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->is('roles*') ? 'active' : '' }}"
-                                href="{{ route('roles.index') }}">
-                                <i class="bi bi-circle"></i> Role
-                            </a>
-                        </li>
+
+                        @if (Auth::user()->isSuperAdmin())
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('roles*') ? 'active' : '' }}"
+                                    href="{{ route('roles.index') }}">
+                                    <i class="bi bi-circle"></i> Role
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </li>
-            <!-- Akhir Accordion Manajemen Pengguna -->
         @endif
+        <!-- Akhir Accordion Manajemen Pengguna -->
+
 
         <li class="nav-item mt-3">
             <a class="nav-link" href="{{ route('home') }}" target="_blank">
