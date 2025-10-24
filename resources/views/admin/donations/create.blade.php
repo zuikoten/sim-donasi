@@ -12,16 +12,12 @@
                 <form method="POST" action="{{ route('admin.donations.store') }}" enctype="multipart/form-data">
                     @csrf
 
-                    <!-- PILIH DONATUR (AJAX SEARCH) -->
+                    <!-- PILIH DONATUR (DYNAMIC AJAX) -->
                     <div class="mb-4">
                         <label for="user_id" class="form-label fw-semibold">Pilih Donatur</label>
                         <select class="form-select select2-ajax @error('user_id') is-invalid @enderror" id="user_id"
                             name="user_id">
-                            @if (old('user_id'))
-                                <option value="{{ old('user_id') }}" selected>
-                                    {{ \App\Models\User::find(old('user_id'))->profile->nama_lengkap ?? \App\Models\User::find(old('user_id'))->name }}
-                                </option>
-                            @endif
+                            <option value="" selected disabled>-- Cari atau pilih Donatur --</option>
                         </select>
                         @error('user_id')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -96,12 +92,15 @@
 
                     <!-- BUKTI PEMBAYARAN -->
                     <div class="mb-4">
-                        <label for="bukti_transfer" class="form-label fw-semibold">Upload Bukti Pembayaran <em>&#40;berupa
+                        <label for="bukti_transfer" class="form-label fw-semibold">Upload Bukti Penerimaan <em>&#40;berupa
                                 bukti
-                                transfer ataupun foto&#41;</em> </label>
-                        <input type="file" class="form-control" name="bukti_transfer" id="bukti_transfer"
-                            accept="image/*">
+                                transfer/foto nota/foto penyerahan&#41;</em> </label>
+                        <input type="file" class="form-control @error('bukti_transfer') is-invalid @enderror"
+                            id="bukti_transfer" name="bukti_transfer" accept="image/*">
                         <div class="form-text text-muted">Maksimal 2MB (jpeg, png, jpg, gif).</div>
+                        @error('bukti_transfer')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="d-flex justify-content-end mt-4">
@@ -153,25 +152,19 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            $('.select2').select2({
+            $('#user_id').select2({
                 theme: 'bootstrap-5',
                 width: '100%',
-                placeholder: '-- Pilih --',
-                allowClear: true
-            });
-
-            // Select2 AJAX untuk donatur
-            $('.select2-ajax').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: 'Ketik nama donatur...',
+                placeholder: '-- Cari atau pilih Donatur --',
+                allowClear: true,
+                minimumInputLength: 0,
                 ajax: {
-                    url: '{{ route('donatur.search') }}',
+                    url: '{{ route('search.donatur') }}',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
                         return {
-                            term: params.term
+                            term: params.term || '',
                         };
                     },
                     processResults: function(data) {
@@ -180,14 +173,8 @@
                         };
                     },
                     cache: true
-                },
-                minimumInputLength: 1,
+                }
             });
-        });
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
         });
     </script>
 @endpush

@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="bukti_transfer" class="form-label">Upload Bukti Transfer</label>
+                        <label for="bukti_transfer" class="form-label">Upload Bukti Penerimaan</label>
                         <input type="file" class="form-control @error('bukti_transfer') is-invalid @enderror" id="bukti_transfer" name="bukti_transfer" accept="image/*">
                         <div class="form-text">Format: JPEG, PNG, JPG, GIF. Maksimal: 2MB.</div>
                         @error('bukti_transfer')

@@ -27,8 +27,10 @@ class AdminDonationController extends Controller
             'nominal.numeric' => 'Nominal donasi harus berupa angka.',
             'nominal.min' => 'Nilai donasi minimal Rp 1.000.',
             'metode_pembayaran.required' => 'Metode pembayaran wajib diisi.',
+            'bukti_transfer.required' => 'Bukti transfer wajib diupload.',
             'bukti_transfer.image' => 'File bukti transfer harus berupa gambar.',
-            'bukti_transfer.require' => 'Bukti Pembayaran wajib di upload.',
+            'bukti_transfer.mimes' => 'Format bukti transfer harus: jpeg, png, jpg, gif.',
+            'bukti_transfer.max' => 'Ukuran bukti transfer maksimal 2MB.',
         ];
 
         $request->validate([
