@@ -5,6 +5,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsureProfileCompleted;
 use \App\Http\Middleware\CheckRole;
+use Illuminate\Console\Scheduling\Schedule;
+use App\Jobs\SendBirthdayNotificationJob;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(

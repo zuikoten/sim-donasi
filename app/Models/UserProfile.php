@@ -28,7 +28,7 @@ class UserProfile extends Model
     ];
 
     protected $casts = [
-        'tanggal_lahir' => 'date', // <-- ini yang penting
+        'tanggal_lahir' => 'date',
     ];
 
     public function user()
