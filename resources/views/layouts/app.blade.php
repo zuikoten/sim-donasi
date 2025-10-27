@@ -95,7 +95,8 @@
                                                 class="badge bg-danger">{{ Auth::user()->notifications()->where('status_baca', false)->count() }}</span>
                                         @endif
                                     </a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a>
+                                <li><a class="dropdown-item" href="{{ route('admin.settings.index') }}"><i
+                                            class="bi bi-gear"></i> Settings</a>
                                 </li>
                                 <li>
                                     <hr class="dropdown-divider">

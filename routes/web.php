@@ -1,26 +1,5 @@
 <?php
 
-//use App\Http\Controllers\ProfileController;
-//use Illuminate\Support\Facades\Route;
-
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth', 'verified'])->name('dashboard');
-//
-//Route::middleware('auth')->group(function () {
-//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-//});
-//
-//require __DIR__ . '/auth.php';
-
-//<?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgramController;
@@ -36,6 +15,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DonaturController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\AdminDonationController;
+
+// ========== Settings Controllers ==========
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\BankAccountController;
 
 
 // Public routes
@@ -123,4 +108,43 @@ Route::middleware(['auth'])->group(function () {
 
     // AJAX search Donatur
     Route::get('/search-donatur', [DonaturController::class, 'search'])->name('donatur.search');
+
+    // ========== NEW: Settings Routes (Superadmin or Admin only) ==========
+    Route::middleware(['role:superadmin,admin'])->prefix('admin')->name('admin.')->group(function () {
+
+        // Settings Main Page & Updates
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings/general', [SettingController::class, 'updateGeneral'])->name('settings.general.update');
+        Route::post('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
+
+        // Team Management
+        Route::prefix('settings/teams')->name('settings.teams.')->group(function () {
+            Route::get('/', [TeamController::class, 'index'])->name('index');
+            Route::post('/', [TeamController::class, 'store'])->name('store');
+            Route::get('/{team}', [TeamController::class, 'show'])->name('show');
+            Route::post('/{team}', [TeamController::class, 'update'])->name('update'); // Using POST for FormData
+            Route::delete('/{team}', [TeamController::class, 'destroy'])->name('destroy');
+            Route::post('/{team}/move', [TeamController::class, 'move'])->name('move');
+        });
+
+        // Testimonials
+        Route::prefix('settings/testimonials')->name('settings.testimonials.')->group(function () {
+            Route::get('/', [TestimonialController::class, 'index'])->name('index');
+            Route::post('/', [TestimonialController::class, 'store'])->name('store');
+            Route::get('/{testimonial}', [TestimonialController::class, 'show'])->name('show');
+            Route::post('/{testimonial}', [TestimonialController::class, 'update'])->name('update'); // Using POST for FormData
+            Route::delete('/{testimonial}', [TestimonialController::class, 'destroy'])->name('destroy');
+            Route::post('/{testimonial}/move', [TestimonialController::class, 'move'])->name('move');
+        });
+
+        // Bank Accounts
+        Route::prefix('settings/bank-accounts')->name('settings.bank-accounts.')->group(function () {
+            Route::get('/', [BankAccountController::class, 'index'])->name('index');
+            Route::post('/', [BankAccountController::class, 'store'])->name('store');
+            Route::get('/{bankAccount}', [BankAccountController::class, 'show'])->name('show');
+            Route::post('/{bankAccount}', [BankAccountController::class, 'update'])->name('update'); // Using POST for FormData
+            Route::delete('/{bankAccount}', [BankAccountController::class, 'destroy'])->name('destroy');
+        });
+    });
+    // =====================================================================
 });
