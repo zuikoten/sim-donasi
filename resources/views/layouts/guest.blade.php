@@ -13,7 +13,9 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">Sistem Donasi</a>
+            <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo"
+                style="height: 40px; margin-right: 2px;"><a class="navbar-brand"
+                href="{{ route('home') }}">{{ $settings['site_title'] ?? 'Sistem Donasi' }}</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -96,8 +98,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5>Sistem Donasi</h5>
-                    <p>Platform transparansi donasi untuk program ZISWAF</p>
+                    <h5>{{ $settings['site_title'] ?? 'Sistem Donasi' }}</h5>
+                    <p>{{ $settings['site_description'] ?? 'Platform transparansi donasi untuk program ZISWAF' }}</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Link Cepat</h5>
@@ -110,9 +112,11 @@
                 </div>
                 <div class="col-md-4">
                     <h5>Kontak</h5>
-                    <p><i class="bi bi-geo-alt"></i> Jl. Contoh No. 123, Jakarta</p>
-                    <p><i class="bi bi-telephone"></i> (021) 1234567</p>
-                    <p><i class="bi bi-envelope"></i> info@donasi.local</p>
+                    <p><i class="bi bi-geo-alt"></i> {{ $settings['office_address'] ?? 'Alamat Belum Diatur' }}</p>
+                    <p><i class="bi bi-telephone"></i> @php $phoneSetting = App\Models\Setting::where('key', 'office_phone')->first();@endphp
+                        {{ $phoneSetting ? $phoneSetting->formatted_office_phone : $settings['office_phone'] ?? 'Telepon Belum Diatur' }}
+                    </p>
+                    <p><i class="bi bi-envelope"></i> {{ $settings['office_email'] ?? 'Email Belum Diatur' }}</p>
                 </div>
             </div>
             <hr class="bg-white">
@@ -140,7 +144,7 @@
                 if (toggleButton && passwordInput && icon) {
                     toggleButton.addEventListener('click', function() {
                         const type = passwordInput.getAttribute('type') === 'password' ? 'text' :
-                        'password';
+                            'password';
                         passwordInput.setAttribute('type', type);
 
                         // Toggle icon

@@ -1,7 +1,10 @@
 <!-- Awal Sidebar -->
 <div class="sidebar">
     <div class="sidebar-header d-flex justify-content-between align-items-center py-3">
-        <h5 class="text-white text-center m-0">Sistem Donasi</h5>
+        @if (setting('logo'))
+            <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo" style="height: 40px; margin-right: 2px;">
+        @endif
+        <h5 class="text-white text-center m-0">{{ setting('site_title', 'Sistem Donasi') }}</h5>
         <!-- TOMBOL TUTUP (Hanya terlihat di mobile) -->
         <button class="btn btn-link text-white d-md-none" id="sidebarClose">
             <i class="bi bi-x-lg"></i>

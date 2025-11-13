@@ -8,11 +8,25 @@ use App\Models\Beneficiary;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Services\SettingService;
 
 class DashboardController extends Controller
 {
+    protected $settingService;
+
+    public function __construct(SettingService $settingService)
+    {
+        $this->settingService = $settingService;
+    }
+
     public function index(Request $request)
     {
+        // Ambil satu setting
+        $siteTitle = $this->settingService->get('site_title');
+
+        // Ambil semua settings sekaligus
+        $allSettings = $this->settingService->all();
+
         $totalDonations = Donation::where('status', 'terverifikasi')->sum('nominal');
         $totalPrograms = Program::where('status', 'aktif')->count();
         $totalBeneficiaries = Beneficiary::count();
@@ -65,7 +79,9 @@ class DashboardController extends Controller
             'totalBeneficiaries',
             'monthlyDonations',
             'recentDonations',
-            'topPrograms'
+            'topPrograms',
+            'siteTitle',
+            'allSettings'
         ));
     }
 }

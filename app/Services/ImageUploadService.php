@@ -28,9 +28,9 @@ class ImageUploadService
      */
     public function upload($file, $path, $width = null, $height = null, $oldFile = null)
     {
-        // Delete old file if exists
-        if ($oldFile && Storage::exists($oldFile)) {
-            Storage::delete($oldFile);
+        // Delete old file if exists (using public disk)
+        if ($oldFile && Storage::disk('public')->exists($oldFile)) {
+            Storage::disk('public')->delete($oldFile);
         }
 
         // Generate unique filename
@@ -51,8 +51,8 @@ class ImageUploadService
             $image->toJpeg(85); // 85% quality
         }
 
-        // Save to storage
-        Storage::put($fullPath, (string) $image->encode());
+        // Save to storage/app/public/
+        Storage::disk('public')->put($fullPath, (string) $image->encode());
 
         return $fullPath;
     }
@@ -102,8 +102,8 @@ class ImageUploadService
      */
     public function delete($path)
     {
-        if ($path && Storage::exists($path)) {
-            return Storage::delete($path);
+        if ($path && Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->delete($path);
         }
         return false;
     }

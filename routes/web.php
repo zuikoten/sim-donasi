@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\BankAccountController;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 
 // Public routes
@@ -148,3 +150,5 @@ Route::middleware(['auth'])->group(function () {
     });
     // =====================================================================
 });
+
+
