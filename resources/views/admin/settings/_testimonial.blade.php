@@ -57,8 +57,12 @@
 
                         <div class="col-md-6 mb-3">
                             <label for="testimonial_role" class="form-label">Role</label>
-                            <input type="text" class="form-control" id="testimonial_role" name="role"
-                                placeholder="e.g., CEO, Customer">
+                            <select class="form-select" id="testimonial_role" name="role" required>
+                                <option value="Donatur" selected>Donatur</option>
+                                <option value="Wakif">Wakif</option>
+                                <option value="Penerima Manfaat">Penerima Manfaat</option>
+                                <option value="Pembuat Program">Pembuat Program</option>
+                            </select>
                         </div>
 
                         <div class="col-md-6 mb-3">

@@ -29,6 +29,6 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         //Paginator::defaultView('pagination::bootstrap-5');
 
-        View::composer(['public.*', 'layouts.guest'], SettingsComposer::class);
+        View::composer(['admin.*', 'auth.*', 'components.*', 'donatur.*', 'profile.*', 'public.*', 'layouts.guest'], SettingsComposer::class);
     }
 }

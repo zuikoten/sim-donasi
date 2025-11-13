@@ -15,7 +15,18 @@
 
     {{-- Dynamic Favicon --}}
     @if (setting('favicon'))
-        <link rel="icon" href="{{ asset_url(setting('favicon')) }}" type="image/x-icon">
+        @php
+            $faviconPath = asset('storage/' . setting('favicon'));
+            $extension = pathinfo(setting('favicon'), PATHINFO_EXTENSION);
+            $mimeType = match ($extension) {
+                'png' => 'image/png',
+                'svg' => 'image/svg+xml',
+                'ico' => 'image/x-icon',
+                default => 'image/x-icon',
+            };
+        @endphp
+        <link rel="icon" href="{{ $faviconPath }}" type="{{ $mimeType }}">
+        <link rel="shortcut icon" href="{{ $faviconPath }}" type="{{ $mimeType }}">
     @endif
 
     @stack('styles')
@@ -68,6 +79,7 @@
     </style>
 </head>
 
+
 <body>
     @include('layouts.sidebar')
 
@@ -81,8 +93,13 @@
                 <button class="btn btn-link d-block me-2" id="sidebarToggle">
                     <i class="bi bi-list fs-4"></i>
                 </button>
-
-                <a class="navbar-brand" href="{{ route('dashboard') }}">Sistem Donasi</a>
+                @if (setting('logo'))
+                    <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo"
+                        style="height: 40px; margin-right: 2px;">
+                @endif
+                <a class="navbar-brand" href="{{ route('dashboard') }}">
+                    <h5 class="text-black text-center m-0">{{ setting('site_title', 'Sistem Donasi') }}</h5>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>

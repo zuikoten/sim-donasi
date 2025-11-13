@@ -23,6 +23,7 @@ class SettingService
     public function set($key, $value, $type = 'text')
     {
         Cache::forget("setting_{$key}");
+        Cache::forget('all_settings');
         return Setting::set($key, $value, $type);
     }
 

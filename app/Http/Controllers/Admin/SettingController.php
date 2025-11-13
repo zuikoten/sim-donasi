@@ -70,6 +70,7 @@ class SettingController extends Controller
 
         // Clear cache setelah update
         Cache::forget('all_settings');
+        $this->settingService->clearCache();
 
         return redirect()->route('admin.settings.index')
             ->with('success', 'General settings updated successfully!');

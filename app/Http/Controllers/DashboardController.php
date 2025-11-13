@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $siteTitle = $this->settingService->get('site_title');
 
         // Ambil semua settings sekaligus
-        $allSettings = $this->settingService->all();
+        $settings = $this->settingService->all();
 
         $totalDonations = Donation::where('status', 'terverifikasi')->sum('nominal');
         $totalPrograms = Program::where('status', 'aktif')->count();
@@ -81,7 +81,7 @@ class DashboardController extends Controller
             'recentDonations',
             'topPrograms',
             'siteTitle',
-            'allSettings'
+            'settings'
         ));
     }
 }

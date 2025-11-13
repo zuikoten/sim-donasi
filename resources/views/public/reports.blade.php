@@ -3,130 +3,205 @@
 @section('title', 'Laporan Transparansi')
 
 @section('content')
-<!-- Hero Section -->
-<section class="bg-primary text-white py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-12 text-center">
-                <h1 class="display-4 fw-bold">Laporan Transparansi</h1>
-                <p class="lead">Komitmen kami adalah memberikan kejelasan atas setiap donasi yang Anda percayakan kepada kami.</p>
+    <!-- Hero Section -->
+    <section class="bg-primary text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 text-center">
+                    <h1 class="display-4 fw-bold">Laporan Transparansi</h1>
+                    <p class="lead">Komitmen kami adalah memberikan kejelasan atas setiap donasi yang Anda percayakan
+                        kepada kami.</p>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Statistics Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="text-primary">{{ \App\Models\Program::where('status', 'aktif')->count() }}</h2>
-                        <p>Program Aktif</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="text-success">Rp {{ number_format($totalDonations, 0, ',', '.') }}</h2>
-                        <p>Total Dana Terkumpul</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="text-info">Rp {{ number_format($totalDistributed, 0, ',', '.') }}</h2>
-                        <p>Total Dana Tersalurkan</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="text-warning">{{ \App\Models\Beneficiary::count() }}</h2>
-                        <p>Penerima Manfaat</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Programs Report Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-5">
-                <h2 class="fw-bold">Ringkasan Program Donasi</h2>
-                <p class="lead">Berikut adalah perkembangan dari setiap program yang kami jalankan.</p>
-            </div>
-        </div>
-        
-        <div class="row">
-            @forelse($programs as $program)
-            <div class="col-lg-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title mb-0">{{ $program->nama_program }}</h5>
-                            <span class="badge bg-primary">{{ $program->kategori }}</span>
+    <!-- Statistics Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="text-primary">{{ \App\Models\Program::where('status', 'aktif')->count() }}</h2>
+                            <p>Program Aktif</p>
                         </div>
-                        
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Terkumpul</span>
-                                <span>{{ $program->progress_percentage }}%</span>
-                            </div>
-                            <div class="progress mb-2">
-                                <div class="progress-bar" role="progressbar" style="width: {{ $program->progress_percentage }}%" aria-valuenow="{{ $program->progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <small>Rp {{ number_format($program->dana_terkumpul, 0, ',', '.') }}</small>
-                                <small>Rp {{ number_format($program->target_dana, 0, ',', '.') }}</small>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="text-success">Rp {{ number_format($totalDonations, 0, ',', '.') }}</h2>
+                            <p>Total Dana Terkumpul</p>
                         </div>
-
-                        <div class="row text-center">
-                            <div class="col-6 border-end">
-                                <h6 class="text-success">Rp {{ number_format($program->donations_sum_nominal, 0, ',', '.') }}</h6>
-                                <small class="text-muted">Dana Masuk</small>
-                            </div>
-                            <div class="col-6">
-                                <h6 class="text-info">Rp {{ number_format($program->distributions_sum_nominal_disalurkan, 0, ',', '.') }}</h6>
-                                <small class="text-muted">Dana Keluar</small>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="text-info">Rp {{ number_format($totalDistributed, 0, ',', '.') }}</h2>
+                            <p>Total Dana Tersalurkan</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="text-warning">{{ \App\Models\Beneficiary::count() }}</h2>
+                            <p>Penerima Manfaat</p>
                         </div>
                     </div>
                 </div>
             </div>
-            @empty
-            <div class="col-12 text-center">
-                <p>Belum ada data program yang dapat ditampilkan.</p>
-            </div>
-            @endforelse
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- How to Access Detailed Reports Section -->
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8 text-center">
-                <div class="card shadow-sm">
-                    <div class="card-body p-4">
-                        <h5 class="card-title">Ingin Melihat Laporan Lebih Detail?</h5>
-                        <p class="card-text">Untuk akses laporan lengkap (termasuk nama donatur, detail penyaluran, dan laporan PDF/Excel), silakan masuk ke akun Anda.</p>
-                        <a href="{{ route('login') }}" class="btn btn-primary">
-                            <i class="bi bi-box-arrow-in-right"></i> Masuk ke Akun
-                        </a>
+    <!-- Programs Report Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="fw-bold">Ringkasan Program Donasi</h2>
+                    <p class="lead">Berikut adalah perkembangan dari setiap program yang kami jalankan.</p>
+                </div>
+            </div>
+
+            <!-- Sorting & Filter Controls -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="GET" action="{{ route('public.reports') }}" id="sortForm">
+                                <div class="row g-3 align-items-center">
+                                    <!-- Sort By -->
+                                    <div class="col-md-6">
+                                        <label for="sort" class="form-label fw-bold">Urutkan berdasarkan:</label>
+                                        <select name="sort" id="sort" class="form-select"
+                                            onchange="document.getElementById('sortForm').submit()">
+                                            <option value="popular" {{ $sort == 'popular' ? 'selected' : '' }}>Program
+                                                Favorit Donatur</option>
+                                            <option value="least" {{ $sort == 'least' ? 'selected' : '' }}>Program Yang
+                                                Sedang Tumbuh</option>
+                                            <option value="name_asc" {{ $sort == 'name_asc' ? 'selected' : '' }}>Nama
+                                                Program (A-Z)</option>
+                                            <option value="name_desc" {{ $sort == 'name_desc' ? 'selected' : '' }}>Nama
+                                                Program (Z-A)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Category Filter -->
+                                    <div class="col-md-6">
+                                        <label for="category" class="form-label fw-bold">Filter Kategori:</label>
+                                        <select name="category" id="category" class="form-select"
+                                            onchange="document.getElementById('sortForm').submit()">
+                                            <option value="all" {{ $category == 'all' ? 'selected' : '' }}>Semua Kategori
+                                            </option>
+                                            @foreach ($categories as $cat)
+                                                <option value="{{ $cat }}"
+                                                    {{ $category == $cat ? 'selected' : '' }}>
+                                                    {{ ucfirst($cat) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if ($programs->count() > 0)
+                <!-- Programs Grid -->
+                <div class="row">
+                    @foreach ($programs as $program)
+                        <div class="col-lg-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title mb-0">{{ $program->nama_program }}</h5>
+                                        <span class="badge bg-primary">{{ ucfirst($program->kategori) }}</span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Terkumpul</span>
+                                            <span>{{ number_format($program->progress_percentage, 1) }}%</span>
+                                        </div>
+                                        <div class="progress mb-2" style="height: 25px;">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width: {{ min(100, $program->progress_percentage) }}%"
+                                                aria-valuenow="{{ $program->progress_percentage }}" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <small class="fw-bold text-success">Rp
+                                                {{ number_format($program->donations_sum_nominal ?? 0, 0, ',', '.') }}</small>
+                                            <small class="text-muted">Target: Rp
+                                                {{ number_format($program->target_dana, 0, ',', '.') }}</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="row text-center">
+                                        <div class="col-6 border-end">
+                                            <h6 class="text-success mb-0">Rp
+                                                {{ number_format($program->donations_sum_nominal ?? 0, 0, ',', '.') }}</h6>
+                                            <small class="text-muted">Dana Masuk</small>
+                                            <div class="mt-1">
+                                                <span class="badge bg-info">{{ $program->donations_count ?? 0 }}
+                                                    Donasi</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <h6 class="text-info mb-0">Rp
+                                                {{ number_format($program->distributions_sum_nominal_disalurkan ?? 0, 0, ',', '.') }}
+                                            </h6>
+                                            <small class="text-muted">Dana Disalurkan</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Informasi Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                    <span class="text-muted">
+                        Menampilkan {{ $programs->firstItem() }} hingga {{ $programs->lastItem() }} dari
+                        {{ $programs->total() }} program.
+                    </span>
+                    {{ $programs->links() }}
+                </div>
+            @else
+                <div class="text-center py-5">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Belum ada program donasi yang dapat ditampilkan untuk filter ini.
+                    </div>
+                </div>
+            @endif
+        </div>
+    </section>
+
+    <!-- How to Access Detailed Reports Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <h5 class="card-title">Ingin Melihat Laporan Lebih Detail?</h5>
+                            <p class="card-text">Untuk akses laporan lengkap (termasuk nama donatur, detail penyaluran, dan
+                                laporan PDF/Excel), silakan masuk ke akun Anda.</p>
+                            <a href="{{ route('login') }}" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> Masuk ke Akun
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 @endsection

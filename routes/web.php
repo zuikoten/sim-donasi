@@ -33,6 +33,20 @@ Route::get('/tentang', [PublicController::class, 'about'])->name('about');
 Route::get('/kontak', [PublicController::class, 'contact'])->name('contact');
 Route::post('/kontak', [PublicController::class, 'submitContact'])->name('contact.submit');
 
+Route::get('/favicon.ico', function () {
+    $faviconPath = setting('favicon');
+    if ($faviconPath) {
+        $fullPath = storage_path('app/public/' . $faviconPath);
+        if (file_exists($fullPath)) {
+            return response()->file($fullPath, [
+                'Content-Type' => mime_content_type($fullPath),
+                'Cache-Control' => 'public, max-age=3600'
+            ]);
+        }
+    }
+    abort(404);
+});
+
 // Authentication routes (from Laravel Breeze)
 require __DIR__ . '/auth.php';
 
@@ -150,5 +164,3 @@ Route::middleware(['auth'])->group(function () {
     });
     // =====================================================================
 });
-
-

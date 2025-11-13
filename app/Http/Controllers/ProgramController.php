@@ -6,6 +6,7 @@ use App\Models\Program;
 use App\Models\Donation;
 use App\Models\Distribution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProgramController extends Controller
 {
@@ -23,16 +24,21 @@ class ProgramController extends Controller
         // Ambil filter sort
         $sort = $request->input('sort', 'dana_desc');
 
-        // Query dasar
-        $query = Program::query();
+        // Query dasar + agregat donasi terverifikasi
+        $query = Program::withCount(['donations' => function ($query) {
+            $query->where('status', 'terverifikasi');
+        }])
+            ->withSum(['donations' => function ($query) {
+                $query->where('status', 'terverifikasi');
+            }], 'nominal');
 
         // Urutkan berdasarkan pilihan user
         switch ($sort) {
             case 'dana_desc':
-                $query->orderBy('dana_terkumpul', 'desc');
+                $query->orderBy('donations_sum_nominal', 'desc');
                 break;
             case 'dana_asc':
-                $query->orderBy('dana_terkumpul', 'asc');
+                $query->orderBy('donations_sum_nominal', 'asc');
                 break;
             case 'target_desc':
                 $query->orderBy('target_dana', 'desc');
@@ -47,6 +53,7 @@ class ProgramController extends Controller
 
         // Jalankan pagination
         $programs = $query->paginate($perPage)->appends($request->query());
+
 
         // Kirim ke view
         return view('admin.programs.index', compact('programs'));

@@ -7,6 +7,8 @@ use App\Models\Donation;
 use App\Models\Distribution;
 use Illuminate\Http\Request;
 use App\Services\SettingService;
+use App\Models\Team;
+use App\Models\Testimonial;
 
 class PublicController extends Controller
 {
@@ -17,15 +19,42 @@ class PublicController extends Controller
         $this->settingService = $settingService;
     }
 
-    public function home()
+    public function home(Request $request)
     {
-        $programs = Program::where('status', 'aktif')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $category = $request->get('category', 'all');
+
+        $query = Program::where('status', 'aktif')
+            ->withCount(['donations' => function ($query) {
+                $query->where('status', 'terverifikasi');
+            }])
+            ->withSum(['donations' => function ($query) {
+                $query->where('status', 'terverifikasi');
+            }], 'nominal');
+
+        // Filter by category
+        if ($category !== 'all') {
+            $query->where('kategori', $category);
+        }
+
+        // Urutkan dari yang paling banyak donasinya
+        $programs = $query->orderBy('donations_sum_nominal', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Ambil daftar kategori yang ada
+        $categories = Program::where('status', 'aktif')
+            ->select('kategori')
+            ->distinct()
+            ->pluck('kategori');
 
         $settings = $this->settingService->all();
 
-        return view('public.home', compact('programs', 'settings'));
+        // Ambil testimonial aktif dengan paginasi 6 per halaman
+        $testimonials = Testimonial::where('is_active', true)
+            ->orderBy('order', 'asc')
+            ->paginate(6);
+
+        return view('public.home', compact('programs', 'settings', 'categories', 'category', 'testimonials'));
     }
 
     public function programDetail($id)
@@ -40,27 +69,66 @@ class PublicController extends Controller
         return view('public.program', compact('program', 'donations'));
     }
 
-    public function reports()
+    public function reports(Request $request)
     {
-        $programs = Program::withCount(['donations' => function ($query) {
+        $sort = $request->get('sort', 'popular'); // default: popular
+        $category = $request->get('category', 'all'); // default: all categories
+
+        $query = Program::withCount(['donations' => function ($query) {
             $query->where('status', 'terverifikasi');
         }])
             ->withSum(['donations' => function ($query) {
                 $query->where('status', 'terverifikasi');
             }], 'nominal')
-            ->withSum('distributions', 'nominal_disalurkan')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->withSum('distributions', 'nominal_disalurkan');
+
+        // Filter by category
+        if ($category !== 'all') {
+            $query->where('kategori', $category);
+        }
+
+        // Sorting
+        switch ($sort) {
+            case 'popular':
+                // Terpopuler: berdasarkan total donasi terverifikasi (terbanyak ke sedikit)
+                $query->orderBy('donations_sum_nominal', 'desc');
+                break;
+            case 'least':
+                // Paling sedikit pengumpulannya
+                $query->orderBy('donations_sum_nominal', 'asc');
+                break;
+            case 'name_asc':
+                // Nama A-Z
+                $query->orderBy('nama_program', 'asc');
+                break;
+            case 'name_desc':
+                // Nama Z-A
+                $query->orderBy('nama_program', 'desc');
+                break;
+            default:
+                $query->orderBy('donations_sum_nominal', 'desc');
+                break;
+        }
+
+        // Pagination: 10 items per page
+        $programs = $query->paginate(10)->withQueryString();
 
         $totalDonations = Donation::where('status', 'terverifikasi')->sum('nominal');
         $totalDistributed = Distribution::sum('nominal_disalurkan');
 
-        return view('public.reports', compact('programs', 'totalDonations', 'totalDistributed'));
+        // Ambil daftar kategori yang ada
+        $categories = Program::select('kategori')
+            ->distinct()
+            ->pluck('kategori');
+
+        return view('public.reports', compact('programs', 'totalDonations', 'totalDistributed', 'categories', 'sort', 'category'));
     }
 
     public function about()
     {
-        return view('public.about');
+        // Ambil team yang aktif dan sudah diurutkan
+        $teams = Team::getActive();
+        return view('public.about', compact('teams'));
     }
 
     public function contact()

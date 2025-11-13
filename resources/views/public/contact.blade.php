@@ -86,24 +86,27 @@
                             <h5 class="card-title">Informasi Kontak</h5>
                             <div class="mb-3">
                                 <h6><i class="bi bi-geo-alt text-primary"></i> Alamat</h6>
-                                <p>{{ $settings['office_address'] ?? 'Alamat belum diatur' }}
-                                </p>
+                                <div class="form-control-plaintext border rounded p-2 bg-light">
+                                    {{ $settings['office_address'] ?? 'Alamat belum diatur' }}
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <h6><i class="bi bi-telephone text-primary"></i> Telepon</h6>
-                                <p>@php
-                                    $phoneSetting = App\Models\Setting::where('key', 'office_phone')->first();
-                                @endphp
+                                <div class="form-control-plaintext border rounded p-2 bg-light">
+                                    @php
+                                        $phoneSetting = App\Models\Setting::where('key', 'office_phone')->first();
+                                    @endphp
                                     <a href="tel:+{{ $settings['office_phone'] }}" class="text-decoration-none">
                                         {{ $phoneSetting ? $phoneSetting->formatted_office_phone : $settings['office_phone'] ?? 'Telepon belum diatur' }}
                                     </a>
-                                </p>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <h6><i class="bi bi-envelope text-primary"></i> Email</h6>
-                                <p><a href="mailto:{{ $settings['office_email'] }}" class="text-decoration-none">
+                                <div class="form-control-plaintext border rounded p-2 bg-light"><a
+                                        href="mailto:{{ $settings['office_email'] }}" class="text-decoration-none">
                                         {{ $settings['office_email'] ?? 'Email belum diatur' }}
-                                    </a></p>
+                                    </a></div>
                             </div>
                             <div class="mb-3">
                                 <h6><i class="bi bi-clock text-primary"></i> Jam Operasional</h6>
