@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use App\View\Composers\SettingsComposer;
+use App\Services\ContactService;
+use App\Services\SettingService;
 
 class AppServiceProvider extends ServiceProvider
 {

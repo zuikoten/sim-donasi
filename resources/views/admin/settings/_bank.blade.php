@@ -10,6 +10,7 @@
         <thead class="table-light">
             <tr>
                 <th width="80">Logo</th>
+                <th width="80">QRIS</th>
                 <th>Bank Name</th>
                 <th>Account Number</th>
                 <th>Account Holder</th>
@@ -44,6 +45,17 @@
                         <div class="mt-2">
                             <img src="#" alt="Preview" class="image-preview d-none" id="bank_logo_preview"
                                 style="max-width: 120px;">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="qris_image" class="form-label">QRIS Image</label>
+                        <input type="file" class="form-control" id="qris_image" name="qris_image" accept="image/*">
+                        <small class="text-muted">400x400 px, Max 512KB</small>
+
+                        <div class="mt-2">
+                            <img src="#" alt="Preview" id="qris_image_preview" class="image-preview d-none"
+                                style="max-width: 150px;">
                         </div>
                     </div>
 
@@ -119,6 +131,11 @@
                 <img src="${bank.bank_logo ? '/storage/' + bank.bank_logo : '/images/default-bank.png'}" 
                      alt="${bank.bank_name}" class="rounded" style="width: 50px; height: 50px; object-fit: contain;">
             </td>
+            <td>
+                <img src="${bank.qris_image ? '/storage/' + bank.qris_image : '/images/default-qris.png'}"
+                class="rounded" style="width: 50px; height: 50px; object-fit: contain;">
+            </td>
+
             <td><strong>${bank.bank_name}</strong></td>
             <td>${bank.account_number}</td>
             <td>${bank.account_holder}</td>
@@ -147,6 +164,8 @@
             document.getElementById('bank_method').value = 'POST';
             document.getElementById('bankModalTitle').textContent = 'Add Bank Account';
             document.getElementById('bank_logo_preview').classList.add('d-none');
+            document.getElementById('qris_image_preview').classList.add('d-none');
+
         }
 
         // Edit bank
@@ -162,9 +181,16 @@
                     document.getElementById('bank_is_active').value = bank.is_active ? '1' : '0';
                     document.getElementById('bankModalTitle').textContent = 'Edit Bank Account';
 
+                    // Bank Logo preview
                     if (bank.bank_logo) {
                         document.getElementById('bank_logo_preview').src = '/storage/' + bank.bank_logo;
                         document.getElementById('bank_logo_preview').classList.remove('d-none');
+                    }
+
+                    // QRIS preview
+                    if (bank.qris_image) {
+                        document.getElementById('qris_image_preview').src = '/storage/' + bank.qris_image;
+                        document.getElementById('qris_image_preview').classList.remove('d-none');
                     }
 
                     new bootstrap.Modal(document.getElementById('bankModal')).show();
@@ -220,7 +246,7 @@
             }
         }
 
-        // Photo preview
+        // Bank Logo preview
         document.getElementById('bank_logo').addEventListener('change', function(e) {
             const file = e.target.files[0];
             const preview = document.getElementById('bank_logo_preview');
@@ -231,6 +257,21 @@
                     preview.src = e.target.result;
                     preview.classList.remove('d-none');
                 }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // QRIS preview
+        document.getElementById('qris_image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('qris_image_preview');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.src = event.target.result;
+                    preview.classList.remove('d-none');
+                };
                 reader.readAsDataURL(file);
             }
         });

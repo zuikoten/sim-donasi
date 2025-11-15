@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\SettingService;
 use App\Models\Team;
 use App\Models\Testimonial;
+use App\Models\BankAccount;
 
 class PublicController extends Controller
 {
@@ -49,10 +50,11 @@ class PublicController extends Controller
 
         $settings = $this->settingService->all();
 
-        // Ambil testimonial aktif dengan paginasi 6 per halaman
+        // Ambil maksimal 5 testimonial aktif
         $testimonials = Testimonial::where('is_active', true)
             ->orderBy('order', 'asc')
-            ->paginate(6);
+            ->limit(5)
+            ->get();
 
         return view('public.home', compact('programs', 'settings', 'categories', 'category', 'testimonials'));
     }
@@ -63,10 +65,16 @@ class PublicController extends Controller
         $donations = Donation::where('program_id', $id)
             ->where('status', 'terverifikasi')
             ->orderBy('created_at', 'desc')
-            ->limit(5)
+            ->limit(10)
             ->get();
 
-        return view('public.program', compact('program', 'donations'));
+        $totalDonasiProgram = Donation::where('program_id', $id)
+            ->where('status', 'terverifikasi')
+            ->sum('nominal');
+
+        $bankAccounts = BankAccount::getActive();
+
+        return view('public.program', compact('program', 'donations', 'bankAccounts', 'totalDonasiProgram'));
     }
 
     public function reports(Request $request)

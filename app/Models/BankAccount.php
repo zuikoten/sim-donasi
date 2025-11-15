@@ -15,6 +15,7 @@ class BankAccount extends Model
         'account_number',
         'account_holder',
         'bank_logo',
+        'qris_image',
         'is_active',
     ];
 

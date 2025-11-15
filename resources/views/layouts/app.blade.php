@@ -171,17 +171,22 @@
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebarClose = document.getElementById('sidebarClose');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebar = document.querySelector('.sidebar');
             const body = document.body;
 
             function openSidebar() {
                 body.classList.add('sidebar-open');
+                sidebar.classList.remove('closed');
+                sidebar.classList.add('open');
             }
 
             function closeSidebar() {
                 body.classList.remove('sidebar-open');
+                sidebar.classList.remove('open');
+                sidebar.classList.add('closed');
             }
 
-            // --- PERBAIKAN: Tombol hamburger sekarang benar-benar toggle ---
+            // Tombol hamburger menjadi toggle ---
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', function() {
                     body.classList.toggle('sidebar-open');
@@ -197,6 +202,8 @@
             if (sidebarOverlay) {
                 sidebarOverlay.addEventListener('click', closeSidebar);
             }
+
+            closeSidebar();
         });
     </script>
 

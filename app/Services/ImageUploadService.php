@@ -98,6 +98,15 @@ class ImageUploadService
     }
 
     /**
+     * Upload QRIS Image
+     */
+    public function uploadQrisImage($file, $oldFile = null)
+    {
+        // Crop/resize to square 400x400 for optimal scanning
+        return $this->upload($file, 'uploads/banks/qris', 400, 400, $oldFile);
+    }
+
+    /**
      * Delete file from storage
      */
     public function delete($path)

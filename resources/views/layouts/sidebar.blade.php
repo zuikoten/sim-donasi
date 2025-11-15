@@ -145,6 +145,21 @@
 <!-- resources/views/layouts/sidebar.blade.php -->
 
 <style>
+    .sidebar,
+    .sidebar * {
+        pointer-events: auto !important;
+    }
+
+    /* Nonaktifkan klik ketika sidebar tersembunyi */
+    .sidebar.closed {
+        pointer-events: none;
+    }
+
+    /* Aktifkan klik ketika sidebar terbuka */
+    .sidebar.open {
+        pointer-events: auto;
+    }
+
     /* --- Sidebar --- */
     .sidebar {
         position: fixed;

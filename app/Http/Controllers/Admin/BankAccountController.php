@@ -35,13 +35,20 @@ class BankAccountController extends Controller
             'account_number' => 'required|string|max:50',
             'account_holder' => 'required|string|max:255',
             'bank_logo' => 'nullable|image|mimes:jpg,jpeg,png|max:512',
+            'qris_image' => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
+
         ]);
 
         $data = $request->only(['bank_name', 'account_number', 'account_holder']);
 
-        // Upload logo
+        // Upload bank logo
         if ($request->hasFile('bank_logo')) {
             $data['bank_logo'] = $this->imageService->uploadBankLogo($request->file('bank_logo'));
+        }
+
+        // Upload QRIS image
+        if ($request->hasFile('qris_image')) {
+            $data['qris_image'] = $this->imageService->uploadQrisImage($request->file('qris_image'));
         }
 
         $bank = BankAccount::create($data);
@@ -71,6 +78,7 @@ class BankAccountController extends Controller
             'account_number' => 'required|string|max:50',
             'account_holder' => 'required|string|max:255',
             'bank_logo' => 'nullable|image|mimes:jpg,jpeg,png|max:512',
+            'qris_image' => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -80,9 +88,14 @@ class BankAccountController extends Controller
             $data['is_active'] = $request->is_active;
         }
 
-        // Upload new logo if provided
+        // Ganti Bank Logo
         if ($request->hasFile('bank_logo')) {
             $data['bank_logo'] = $this->imageService->uploadBankLogo($request->file('bank_logo'), $bankAccount->bank_logo);
+        }
+
+        // Ganti QRIS image
+        if ($request->hasFile('qris_image')) {
+            $data['qris_image'] = $this->imageService->uploadQrisImage($request->file('qris_image'), $bankAccount->qris_image);
         }
 
         $bankAccount->update($data);

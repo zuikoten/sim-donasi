@@ -270,39 +270,41 @@
 
             @if ($testimonials->count() > 0)
                 <div class="row">
-                    @foreach ($testimonials as $testimonial)
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                <div class="card-body">
-                                    <div class="d-flex mb-3">
-                                        <img src="{{ $testimonial->photo_url }}" alt="{{ $testimonial->name }}"
-                                            class="rounded-circle me-3"
-                                            style="width: 50px; height: 50px; object-fit: cover;">
-                                        <div>
-                                            <h6 class="mb-0">{{ $testimonial->name }}</h6>
+                    <div class="col-12">
+                        <div class="testimonial-carousel-container">
+                            <div class="testimonial-stack" id="testimonialStack">
+                                @foreach ($testimonials as $index => $testimonial)
+                                    <div class="testimonial-card {{ $index === 0 ? 'active' : ($index === 1 ? 'next' : ($index === 2 ? 'next-2' : 'hidden')) }}"
+                                        data-index="{{ $index }}">
+                                        <div class="card-inner">
+                                            <img src="{{ $testimonial->photo_url }}" alt="{{ $testimonial->name }}"
+                                                class="rounded-circle testimonial-photo mb-3">
+                                            <div class="mb-3">
+                                                {!! $testimonial->stars_html !!}
+                                            </div>
+                                            <p class="testimonial-comment mb-4">
+                                                "{{ $testimonial->comment }}"
+                                            </p>
+                                            <h5 class="fw-bold mb-1">{{ $testimonial->name }}</h5>
                                             <small class="text-muted">{{ $testimonial->role }}</small>
                                         </div>
                                     </div>
-                                    <p class="mb-3">{{ $testimonial->comment }}</p>
-                                    <div>
-                                        {!! $testimonial->stars_html !!}
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
-                    @endforeach
-                </div>
 
-                <!-- Pagination -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">
-                                Menampilkan {{ $testimonials->firstItem() }} hingga {{ $testimonials->lastItem() }} dari
-                                {{ $testimonials->total() }} testimoni
-                            </span>
-                            {{ $testimonials->links() }}
+                        <!-- Controls -->
+                        <div class="carousel-controls">
+                            <button class="carousel-btn" id="prevBtn">
+                                <i class="bi bi-chevron-left fs-5"></i>
+                            </button>
+                            <button class="carousel-btn" id="nextBtn">
+                                <i class="bi bi-chevron-right fs-5"></i>
+                            </button>
                         </div>
+
+                        <!-- Indicators -->
+                        <div class="carousel-indicators-custom" id="indicators"></div>
                     </div>
                 </div>
             @else
@@ -317,6 +319,7 @@
             @endif
         </div>
     </section>
+
 @endsection
 
 @push('styles')
@@ -404,6 +407,152 @@
                 padding: 1rem;
             }
         }
+
+        /* Style untuk testimonials section */
+        .testimonial-carousel-container {
+            position: relative;
+            height: 450px;
+            perspective: 1000px;
+        }
+
+        .testimonial-stack {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .testimonial-card {
+            position: absolute;
+            width: 70%;
+            max-width: 600px;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .testimonial-card.active {
+            z-index: 5;
+            transform: translateX(0) scale(1);
+            opacity: 1;
+        }
+
+        .testimonial-card.next {
+            z-index: 4;
+            transform: translateX(15%) scale(0.9);
+            opacity: 0.7;
+        }
+
+        .testimonial-card.next-2 {
+            z-index: 3;
+            transform: translateX(25%) scale(0.8);
+            opacity: 0.4;
+        }
+
+        .testimonial-card.prev {
+            z-index: 4;
+            transform: translateX(-15%) scale(0.9);
+            opacity: 0.7;
+        }
+
+        .testimonial-card.prev-2 {
+            z-index: 3;
+            transform: translateX(-25%) scale(0.8);
+            opacity: 0.4;
+        }
+
+        .testimonial-card.hidden {
+            z-index: 1;
+            transform: translateX(0) scale(0.7);
+            opacity: 0;
+        }
+
+        .card-inner {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .testimonial-photo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 4px solid #f8f9fa;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-comment {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #6c757d;
+            font-style: italic;
+            min-height: 80px;
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .carousel-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: #0d6efd;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-btn:hover {
+            background: #0b5ed7;
+            transform: scale(1.1);
+        }
+
+        .carousel-indicators-custom {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator-dot.active {
+            background: #0d6efd;
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-card {
+                width: 90%;
+            }
+
+            .card-inner {
+                padding: 25px;
+            }
+
+            .testimonial-comment {
+                font-size: 0.95rem;
+            }
+        }
     </style>
 @endpush
 
@@ -433,6 +582,138 @@
                     });
                 });
             });
+        });
+    </script>
+
+    <script>
+        class StackedCarousel {
+            constructor() {
+                this.cards = document.querySelectorAll('.testimonial-card');
+                this.currentIndex = 0;
+                this.totalCards = this.cards.length;
+                this.autoPlayInterval = null;
+                this.isAnimating = false;
+
+                if (this.totalCards > 0) {
+                    this.init();
+                }
+            }
+
+            init() {
+                this.createIndicators();
+                this.attachEventListeners();
+                this.startAutoPlay();
+            }
+
+            createIndicators() {
+                const indicatorsContainer = document.getElementById('indicators');
+                for (let i = 0; i < this.totalCards; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = `indicator-dot ${i === 0 ? 'active' : ''}`;
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    indicatorsContainer.appendChild(dot);
+                }
+            }
+
+            attachEventListeners() {
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+
+                if (prevBtn) prevBtn.addEventListener('click', () => this.prev());
+                if (nextBtn) nextBtn.addEventListener('click', () => this.next());
+
+                this.cards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        const index = parseInt(card.dataset.index);
+                        if (index !== this.currentIndex) {
+                            this.goToSlide(index);
+                        }
+                    });
+                });
+
+                const container = document.querySelector('.testimonial-carousel-container');
+                if (container) {
+                    container.addEventListener('mouseenter', () => this.stopAutoPlay());
+                    container.addEventListener('mouseleave', () => this.startAutoPlay());
+                }
+            }
+
+            updateCards() {
+                if (this.isAnimating) return;
+                this.isAnimating = true;
+
+                this.cards.forEach((card, index) => {
+                    card.className = 'testimonial-card';
+
+                    const diff = (index - this.currentIndex + this.totalCards) % this.totalCards;
+
+                    if (diff === 0) {
+                        card.classList.add('active');
+                    } else if (diff === 1) {
+                        card.classList.add('next');
+                    } else if (diff === 2) {
+                        card.classList.add('next-2');
+                    } else if (diff === this.totalCards - 1) {
+                        card.classList.add('prev');
+                    } else if (diff === this.totalCards - 2) {
+                        card.classList.add('prev-2');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                this.updateIndicators();
+
+                setTimeout(() => {
+                    this.isAnimating = false;
+                }, 600);
+            }
+
+            updateIndicators() {
+                const dots = document.querySelectorAll('.indicator-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentIndex);
+                });
+            }
+
+            next() {
+                this.currentIndex = (this.currentIndex + 1) % this.totalCards;
+                this.updateCards();
+                this.resetAutoPlay();
+            }
+
+            prev() {
+                this.currentIndex = (this.currentIndex - 1 + this.totalCards) % this.totalCards;
+                this.updateCards();
+                this.resetAutoPlay();
+            }
+
+            goToSlide(index) {
+                if (index === this.currentIndex || this.isAnimating) return;
+                this.currentIndex = index;
+                this.updateCards();
+                this.resetAutoPlay();
+            }
+
+            startAutoPlay() {
+                this.autoPlayInterval = setInterval(() => this.next(), 4000);
+            }
+
+            stopAutoPlay() {
+                if (this.autoPlayInterval) {
+                    clearInterval(this.autoPlayInterval);
+                    this.autoPlayInterval = null;
+                }
+            }
+
+            resetAutoPlay() {
+                this.stopAutoPlay();
+                this.startAutoPlay();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new StackedCarousel();
         });
     </script>
 @endpush

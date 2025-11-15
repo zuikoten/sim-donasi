@@ -132,6 +132,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings/general', [SettingController::class, 'updateGeneral'])->name('settings.general.update');
         Route::post('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
+        Route::delete('/settings/contact/{contact_index}', [SettingController::class, 'deleteContact'])->name('settings.contact.delete');
 
         // Team Management
         Route::prefix('settings/teams')->name('settings.teams.')->group(function () {
