@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\BankAccountController;
+use App\Http\Controllers\Admin\SocialMediaController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
@@ -134,12 +135,22 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
         Route::delete('/settings/contact/{contact_index}', [SettingController::class, 'deleteContact'])->name('settings.contact.delete');
 
+        // Social Media
+        Route::prefix('settings/social-media')->name('settings.social-media.')->group(function () {
+            Route::get('/', [SocialMediaController::class, 'index'])->name('index');
+            Route::post('/', [SocialMediaController::class, 'store'])->name('store');
+            Route::get('/{socialMedia}', [SocialMediaController::class, 'show'])->name('show');
+            Route::put('/{socialMedia}', [SocialMediaController::class, 'update'])->name('update');
+            Route::delete('/{socialMedia}', [SocialMediaController::class, 'destroy'])->name('destroy');
+            Route::post('/{socialMedia}/move', [SocialMediaController::class, 'move'])->name('move');
+        });
+
         // Team Management
         Route::prefix('settings/teams')->name('settings.teams.')->group(function () {
             Route::get('/', [TeamController::class, 'index'])->name('index');
             Route::post('/', [TeamController::class, 'store'])->name('store');
             Route::get('/{team}', [TeamController::class, 'show'])->name('show');
-            Route::post('/{team}', [TeamController::class, 'update'])->name('update'); // Using POST for FormData
+            Route::put('/{team}', [TeamController::class, 'update'])->name('update');
             Route::delete('/{team}', [TeamController::class, 'destroy'])->name('destroy');
             Route::post('/{team}/move', [TeamController::class, 'move'])->name('move');
         });
@@ -149,7 +160,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [TestimonialController::class, 'index'])->name('index');
             Route::post('/', [TestimonialController::class, 'store'])->name('store');
             Route::get('/{testimonial}', [TestimonialController::class, 'show'])->name('show');
-            Route::post('/{testimonial}', [TestimonialController::class, 'update'])->name('update'); // Using POST for FormData
+            Route::put('/{testimonial}', [TestimonialController::class, 'update'])->name('update');
             Route::delete('/{testimonial}', [TestimonialController::class, 'destroy'])->name('destroy');
             Route::post('/{testimonial}/move', [TestimonialController::class, 'move'])->name('move');
         });
@@ -159,7 +170,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [BankAccountController::class, 'index'])->name('index');
             Route::post('/', [BankAccountController::class, 'store'])->name('store');
             Route::get('/{bankAccount}', [BankAccountController::class, 'show'])->name('show');
-            Route::post('/{bankAccount}', [BankAccountController::class, 'update'])->name('update'); // Using POST for FormData
+            Route::put('/{bankAccount}', [BankAccountController::class, 'update'])->name('update');
             Route::delete('/{bankAccount}', [BankAccountController::class, 'destroy'])->name('destroy');
         });
     });

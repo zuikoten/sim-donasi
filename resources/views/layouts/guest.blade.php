@@ -8,78 +8,155 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     @stack('styles')
+
+    <style>
+        /* PREMIUM NAVBAR */
+        .premium-nav {
+            background: linear-gradient(135deg, #0047FF, #6A00FF, #00D9FF);
+            background-size: 300% 300%;
+            animation: gradientFlow 12s ease infinite;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* NAV LINKS */
+        .premium-link {
+            color: #ffffff;
+            font-weight: 500;
+            padding: 8px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .premium-link:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+            transform: translateY(-1px);
+        }
+
+        /* PREMIUM LOGIN BUTTON */
+        .premium-btn {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .premium-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.05);
+        }
+
+        /* SHRINK ON SCROLL */
+        #premiumNavbar.navbar-shrink {
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
+            backdrop-filter: blur(6px);
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav id="premiumNavbar" class="navbar navbar-expand-lg premium-nav py-3">
         <div class="container">
-            <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo"
-                style="height: 40px; margin-right: 2px;"><a class="navbar-brand"
-                href="{{ route('home') }}">{{ $settings['site_title'] ?? 'Sistem Donasi' }}</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+            <!-- LOGO -->
+            <a class="navbar-brand d-flex align-items-center text-white" href="{{ route('home') }}">
+                <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo" height="52"
+                    class="me-2 rounded">
+                <span class="fw-bold" style="font-size: 1.35rem;">
+                    {{ $settings['site_title'] ?? 'Sistem Donasi' }}
+                </span>
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <!-- MENU -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <!-- Link untuk Publik (Selalu Terlihat) -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('public.reports') }}">Transparansi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('about') }}">Tentang</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('contact') }}">Kontak</a>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <li class="nav-item mx-2">
+                        <a class="nav-link premium-link" href="{{ route('home') }}">Beranda</a>
                     </li>
 
-                    <!-- KONDISI: JIKA BELUM LOGIN -->
+                    <li class="nav-item mx-2">
+                        <a class="nav-link premium-link" href="{{ route('public.reports') }}">Transparansi</a>
+                    </li>
+
+                    <li class="nav-item mx-2">
+                        <a class="nav-link premium-link" href="{{ route('about') }}">Tentang</a>
+                    </li>
+
+                    <li class="nav-item mx-2">
+                        <a class="nav-link premium-link" href="{{ route('contact') }}">Kontak</a>
+                    </li>
+
                     @guest
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        <li class="nav-item ms-3 mt-3 mt-lg-0">
+                            <a href="{{ route('login') }}" class="btn premium-btn px-4 py-2 rounded-pill">
+                                Login
+                            </a>
                         </li>
                     @endguest
 
-                    <!-- KONDISI: JIKA SUDAH LOGIN -->
                     @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle"></i>
+                        <li class="nav-item dropdown ms-3">
+                            <a class="nav-link dropdown-toggle premium-link" href="#" role="button"
+                                data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle me-1"></i>
                                 {{ Auth::user()->profile->nama_lengkap ?? Auth::user()->name }}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <!-- Logika link dashboard untuk yang donatur dan yang bukan -->
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg">
+
                                 @if (Auth::user()->isDonatur())
                                     <li>
                                         <a class="dropdown-item" href="{{ route('donatur.dashboard') }}">
-                                            <i class="bi bi-speedometer2"></i> Dashboard
+                                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
                                         </a>
                                     </li>
                                 @else
                                     <li>
                                         <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                            <i class="bi bi-speedometer2"></i> Dashboard
+                                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
                                         </a>
                                     </li>
                                 @endif
+
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
+
                                 <li>
                                     <a class="dropdown-item" href="{{ route('profile.details') }}">
-                                        <i class="bi bi-person"></i> Profil Saya
+                                        <i class="bi bi-person me-1"></i> Profil Saya
                                     </a>
                                 </li>
+
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
+
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                        <i class="bi bi-box-arrow-right me-1"></i> Logout
                                     </a>
                                 </li>
                             </ul>
@@ -87,8 +164,11 @@
                     @endauth
                 </ul>
             </div>
+
         </div>
     </nav>
+
+
 
     <main>
         @yield('content')
@@ -112,16 +192,73 @@
                 </div>
                 <div class="col-md-4">
                     <h5>Kontak</h5>
-                    <p><i class="bi bi-geo-alt"></i> {{ $settings['office_address'] ?? 'Alamat Belum Diatur' }}</p>
-                    <p><i class="bi bi-telephone"></i> @php $phoneSetting = App\Models\Setting::where('key', 'office_phone')->first();@endphp
-                        {{ $phoneSetting ? $phoneSetting->formatted_office_phone : $settings['office_phone'] ?? 'Telepon Belum Diatur' }}
-                    </p>
-                    <p><i class="bi bi-envelope"></i> {{ $settings['office_email'] ?? 'Email Belum Diatur' }}</p>
+
+                    {{-- ============================================ --}}
+                    {{-- 🆕 UPDATED: Multi-Contact Fields Support    --}}
+                    {{-- ============================================ --}}
+
+                    {{-- ADDRESS dengan Backward Compatibility --}}
+                    @if (isset($address) && $address)
+                        {{-- 🆕 NEW: Multi-field support --}}
+                        <p>
+                            <i class="bi bi-geo-alt"></i>
+                            {{ $address['value'] }}
+                        </p>
+                    @elseif(isset($settings['office_address']))
+                        {{-- ♻️ LEGACY: Fallback ke data lama --}}
+                        <p>
+                            <i class="bi bi-geo-alt"></i>
+                            {{ $settings['office_address'] }}
+                        </p>
+                    @else
+                        <p><i class="bi bi-geo-alt"></i> Alamat Belum Diatur</p>
+                    @endif
+
+                    {{-- PHONE dengan Backward Compatibility --}}
+                    @if (isset($phone) && $phone)
+                        {{-- 🆕 NEW: Multi-field support dengan formatted number --}}
+                        <p>
+                            <i class="bi bi-telephone"></i>
+                            <a href="tel:+{{ $phone['raw'] }}" class="text-white text-decoration-none">
+                                {{ $phone['formatted'] }}
+                            </a>
+                        </p>
+                    @elseif(isset($settings['office_phone']))
+                        {{-- ♻️ LEGACY: Fallback ke data lama --}}
+                        <p>
+                            <i class="bi bi-telephone"></i>
+                            @php
+                                $phoneSetting = App\Models\Setting::where('key', 'office_phone')->first();
+                            @endphp
+                            {{ $phoneSetting ? $phoneSetting->formatted_office_phone : $settings['office_phone'] }}
+                        </p>
+                    @else
+                        <p><i class="bi bi-telephone"></i> Telepon Belum Diatur</p>
+                    @endif
+
+                    {{-- EMAIL dengan Backward Compatibility --}}
+                    @if (isset($email) && $email)
+                        {{-- 🆕 NEW: Multi-field support --}}
+                        <p>
+                            <i class="bi bi-envelope"></i>
+                            <a href="mailto:{{ $email['value'] }}" class="text-white text-decoration-none">
+                                {{ $email['value'] }}
+                            </a>
+                        </p>
+                    @elseif(isset($settings['office_email']))
+                        {{-- ♻️ LEGACY: Fallback ke data lama --}}
+                        <p>
+                            <i class="bi bi-envelope"></i>
+                            {{ $settings['office_email'] }}
+                        </p>
+                    @else
+                        <p><i class="bi bi-envelope"></i> Email Belum Diatur</p>
+                    @endif
                 </div>
             </div>
             <hr class="bg-white">
             <div class="text-center">
-                <p>&copy; {{ date('Y') }} Sistem Donasi. All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} {{ setting('site_title', 'Sistem Donasi') }}. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -170,6 +307,18 @@
             }
         });
     </script>
+
+    <script>
+        document.addEventListener("scroll", function() {
+            const nav = document.getElementById("premiumNavbar");
+            if (window.scrollY > 20) {
+                nav.classList.add("navbar-shrink");
+            } else {
+                nav.classList.remove("navbar-shrink");
+            }
+        });
+    </script>
+
 
     @stack('scripts')
 

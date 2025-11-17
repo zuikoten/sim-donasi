@@ -22,7 +22,14 @@ class TeamController extends Controller
     public function index()
     {
         $teams = Team::orderBy('order', 'asc')->get();
-        return response()->json($teams);
+
+        // Check if request is AJAX/JSON
+        if (request()->wantsJson()) {
+            return response()->json($teams);
+        }
+
+        // Return view with teams data for server-side rendering
+        return view('admin.teams.index', compact('teams'));
     }
 
     /**
@@ -46,14 +53,11 @@ class TeamController extends Controller
 
         // Set order as last
         $data['order'] = Team::max('order') + 1;
+        $data['is_active'] = $request->input('is_active', 1);
 
         $team = Team::create($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Team member added successfully!',
-            'data' => $team
-        ]);
+        return redirect()->back()->with('success', 'Team member added successfully!');
     }
 
     /**
@@ -62,6 +66,14 @@ class TeamController extends Controller
     public function show(Team $team)
     {
         return response()->json($team);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Team $team)
+    {
+        return view('admin.teams.edit', compact('team'));
     }
 
     /**
@@ -90,11 +102,7 @@ class TeamController extends Controller
 
         $team->update($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Team member updated successfully!',
-            'data' => $team
-        ]);
+        return redirect()->back()->with('success', 'Team member updated successfully!');
     }
 
     /**
@@ -102,12 +110,14 @@ class TeamController extends Controller
      */
     public function destroy(Team $team)
     {
+        // Delete photo if exists
+        if ($team->photo) {
+            $this->imageService->deleteImage($team->photo);
+        }
+
         $team->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Team member deleted successfully!'
-        ]);
+        return redirect()->back()->with('success', 'Team member deleted successfully!');
     }
 
     /**
@@ -137,9 +147,6 @@ class TeamController extends Controller
             $sibling->save();
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Order updated successfully!'
-        ]);
+        return redirect()->back()->with('success', 'Order updated successfully!');
     }
 }

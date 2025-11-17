@@ -38,6 +38,12 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button"
+                        role="tab">
+                        <i class="bi bi-share me-2"></i>Social Media
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button"
                         role="tab">
                         <i class="bi bi-people me-2"></i>Team
@@ -69,17 +75,22 @@
                     @include('admin.settings._contact')
                 </div>
 
-                <!-- Tab 3: Team Management -->
+                <!-- Tab 3: Social Media -->
+                <div class="tab-pane fade" id="social" role="tabpanel">
+                    @include('admin.settings._social')
+                </div>
+
+                <!-- Tab 4: Team Management -->
                 <div class="tab-pane fade" id="team" role="tabpanel">
                     @include('admin.settings._team')
                 </div>
 
-                <!-- Tab 4: Testimonials -->
+                <!-- Tab 5: Testimonials -->
                 <div class="tab-pane fade" id="testimonial" role="tabpanel">
                     @include('admin.settings._testimonial')
                 </div>
 
-                <!-- Tab 5: Bank Accounts -->
+                <!-- Tab 6: Bank Accounts -->
                 <div class="tab-pane fade" id="bank" role="tabpanel">
                     @include('admin.settings._bank')
                 </div>

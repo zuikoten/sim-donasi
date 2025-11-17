@@ -4,64 +4,99 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="bg-primary text-white py-5">
+    <section class="hero-section">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold">Bersama Menebar Kebaikan</h1>
-                    <p class="lead my-4">Bergabunglah dalam program ZISWAF kami untuk membantu mereka yang membutuhkan.
-                        Setiap donasi Anda akan disalurkan secara transparan dan tepat sasaran.</p>
-                    <a href="{{ route('login') }}" class="btn btn-light btn-lg">Donasi Sekarang</a>
+
+                <!-- TEXT -->
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="hero-glass">
+                        <h1 class="hero-title">
+                            Bersama Menebar Kebaikan<br>
+                            Untuk Masa Depan Umat
+                        </h1>
+
+                        <p class="hero-subtitle">
+                            Kelola donasi Anda dengan transparansi penuh. Program ZISWAF
+                            kami membantu menyalurkan amanah tepat sasaran dan berdampak.
+                        </p>
+
+                        <a href="{{ route('login') }}" class="btn btn-light hero-btn mt-3">
+                            Mulai Berdonasi
+                        </a>
+                    </div>
                 </div>
-                <div class="col-lg-6">
-                    <img src="https://picsum.photos/seed/donation/600/400.jpg" alt="Donation" class="img-fluid rounded">
+
+                <!-- IMAGE -->
+                <div class="col-lg-6 text-center">
+                    <img src="{{ asset('images/charity.webp') }}" alt="Ilustrasi Donasi" class="hero-img">
                 </div>
+
             </div>
         </div>
     </section>
 
+
     <!-- Statistics Section -->
-    <section class="py-5">
+    <section class="py-5 bg-light">
         <div class="container">
-            <div class="row text-center">
-                <div class="col-md-3 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="text-primary">{{ $programs->count() }}</h2>
-                            <p>Program Aktif</p>
+
+            <div class="row text-center g-4">
+
+                <!-- Program Aktif -->
+                <div class="col-md-3">
+                    <div class="shadow-sm stat-card p-4 rounded-4 bg-white">
+                        <div class="icon-circle mx-auto mb-3 bg-primary bg-opacity-10 text-primary">
+                            <i class="bi bi-graph-up-arrow"></i>
                         </div>
+                        <h2 class="fw-bold">{{ $programs->count() }}</h2>
+                        <p class="text-muted mb-0">Program Aktif</p>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="text-success">Rp
-                                {{ $programs->sum('dana_terkumpul') > 0 ? number_format($programs->sum('dana_terkumpul'), 0, ',', '.') : 0 }}
-                            </h2>
-                            <p>Dana Terkumpul</p>
+
+                <!-- Dana Terkumpul -->
+                <div class="col-md-3">
+                    <div class="shadow-sm stat-card p-4 rounded-4 bg-white">
+                        <div class="icon-circle mx-auto mb-3 bg-success bg-opacity-10 text-success">
+                            <i class="bi bi-wallet2"></i>
                         </div>
+                        <h2 class="fw-bold text-success">
+                            Rp
+                            {{ $programs->sum('dana_terkumpul') > 0 ? number_format($programs->sum('dana_terkumpul'), 0, ',', '.') : 0 }}
+                        </h2>
+                        <p class="text-muted mb-0">Dana Terkumpul</p>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="text-info">{{ \App\Models\Beneficiary::count() }}</h2>
-                            <p>Penerima Manfaat</p>
+
+                <!-- Penerima Manfaat -->
+                <div class="col-md-3">
+                    <div class="shadow-sm stat-card p-4 rounded-4 bg-white">
+                        <div class="icon-circle mx-auto mb-3 bg-info bg-opacity-10 text-info">
+                            <i class="bi bi-people-fill"></i>
                         </div>
+                        <h2 class="fw-bold text-info">{{ \App\Models\Beneficiary::count() }}</h2>
+                        <p class="text-muted mb-0">Penerima Manfaat</p>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="text-warning">{{ \App\Models\Donation::where('status', 'terverifikasi')->count() }}
-                            </h2>
-                            <p>Donatur</p>
+
+                <!-- Donatur -->
+                <div class="col-md-3">
+                    <div class="shadow-sm stat-card p-4 rounded-4 bg-white">
+                        <div class="icon-circle mx-auto mb-3 bg-warning bg-opacity-10 text-warning">
+                            <i class="bi bi-person-heart"></i>
                         </div>
+                        <h2 class="fw-bold text-warning">
+                            {{ \App\Models\Donation::where('status', 'terverifikasi')->count() }}
+                        </h2>
+                        <p class="text-muted mb-0">Donatur</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
+
+
 
     <!-- Programs Section -->
     <section class="py-5 bg-light">
@@ -74,20 +109,20 @@
             </div>
 
             <!-- Modern Category Filter Tabs -->
-            <div class="row mb-5">
+            <div class="row mb-5" id="programs-section">
                 <div class="col-12">
                     <div class="category-tabs-wrapper">
                         <ul class="nav nav-pills category-tabs justify-content-center" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link {{ $category == 'all' ? 'active' : '' }}"
-                                    href="{{ route('home', ['category' => 'all']) }}">
+                                    href="{{ route('home', ['category' => 'all']) }}#programs-section">
                                     <i class="bi bi-grid-fill me-2"></i>Semua Program
                                 </a>
                             </li>
                             @foreach ($categories as $cat)
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link {{ $category == $cat ? 'active' : '' }}"
-                                        href="{{ route('home', ['category' => $cat]) }}">
+                                        href="{{ route('home', ['category' => $cat]) }}#programs-section">
                                         @if ($cat == 'Zakat')
                                             <i class="bi bi-moon-stars-fill me-2"></i>
                                         @elseif($cat == 'Infaq')
@@ -198,11 +233,13 @@
 
             <div class="row mt-4">
                 <div class="col-12 text-center">
-                    <a href="{{ route('public.reports') }}" class="btn btn-lg btn-outline-primary">
-                        <i class="bi bi-file-earmark-bar-graph me-2"></i>Lihat Laporan Transparansi
+                    <a href="{{ route('public.reports') }}" class="btn btn-premium-report">
+                        <i class="bi bi-file-earmark-bar-graph me-2"></i>
+                        Lihat Laporan Transparansi
                     </a>
                 </div>
             </div>
+
         </div>
     </section>
 
@@ -323,6 +360,101 @@
 @endsection
 
 @push('styles')
+    <!-- Hero Section-->
+    <style>
+        /* HERO PREMIUM */
+        .hero-section {
+            background: linear-gradient(135deg, #0d6efd 0%, #1a73e8 50%, #0a58ca 100%);
+            padding: 90px 0 110px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efek cahaya halus */
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: -80px;
+            left: -80px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.15);
+            filter: blur(80px);
+            border-radius: 50%;
+        }
+
+        .hero-glass {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            padding: 35px;
+            border-radius: 22px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .hero-title {
+            font-size: 2.85rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            opacity: 0.95;
+            margin-top: 15px;
+        }
+
+        /* Tombol premium */
+        .hero-btn {
+            padding: 12px 30px;
+            font-size: 1.05rem;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.18);
+        }
+
+        .hero-img {
+            border-radius: 22px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+            max-width: 100%;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-glass {
+                padding: 25px;
+            }
+        }
+    </style>
+
+    <!-- Statistic Section -->
+    <style>
+        .stat-card {
+            transition: 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6rem;
+        }
+    </style>
+
     <!-- Custom CSS for Modern Tabs -->
     <style>
         .category-tabs-wrapper {
@@ -552,6 +684,42 @@
             .testimonial-comment {
                 font-size: 0.95rem;
             }
+        }
+
+        /* Premium Tombol Laporan Transparansi */
+        .btn-premium-report {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 1.80rem;
+            /* lebih besar */
+            font-weight: 700;
+            padding: 18px 42px;
+            border-radius: 14px;
+
+            /* Kontras & Premium */
+            background: linear-gradient(135deg, #fcb660, #ff4d00);
+            color: #fff !important;
+            border: none;
+
+            /* Glow */
+            box-shadow: 0 8px 16px rgba(255, 80, 25, 0.35);
+
+            /* Transitions */
+            transition: all 0.25s ease-in-out;
+        }
+
+        /* Hover: lebih terang, lebih tinggi */
+        .btn-premium-report:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 12px 24px rgba(255, 80, 25, 0.45);
+            background: linear-gradient(135deg, #ffad48, #ff6a25);
+        }
+
+        /* Active: sedikit turun */
+        .btn-premium-report:active {
+            transform: translateY(1px) scale(0.99);
         }
     </style>
 @endpush

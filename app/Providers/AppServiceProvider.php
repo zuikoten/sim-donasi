@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use App\View\Composers\SettingsComposer;
-use App\Services\ContactService;
+use App\View\Composers\TeamTestiBankSocialComposer;
+use App\Services\ContactFieldService;
 use App\Services\SettingService;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->singleton(ContactFieldService::class, function ($app) {
+            return new ContactFieldService($app->make(SettingService::class));
+        });
     }
 
     /**
@@ -32,5 +36,6 @@ class AppServiceProvider extends ServiceProvider
         //Paginator::defaultView('pagination::bootstrap-5');
 
         View::composer(['admin.*', 'auth.*', 'components.*', 'donatur.*', 'profile.*', 'public.*', 'layouts.guest'], SettingsComposer::class);
+        View::composer(['admin.*', 'auth.*', 'components.*', 'donatur.*', 'profile.*', 'public.*', 'layouts.guest'], TeamTestiBankSocialComposer::class);
     }
 }

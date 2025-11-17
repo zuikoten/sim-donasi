@@ -22,7 +22,14 @@ class TestimonialController extends Controller
     public function index()
     {
         $testimonials = Testimonial::orderBy('order', 'asc')->get();
-        return response()->json($testimonials);
+
+        // Check if request is AJAX/JSON
+        if (request()->wantsJson()) {
+            return response()->json($testimonials);
+        }
+
+        // Return view with testimonials data for server-side rendering
+        return view('admin.testimonials.index', compact('testimonials'));
     }
 
     /**
@@ -47,14 +54,11 @@ class TestimonialController extends Controller
 
         // Set order as last
         $data['order'] = Testimonial::max('order') + 1;
+        $data['is_active'] = $request->input('is_active', 1);
 
         $testimonial = Testimonial::create($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Testimonial added successfully!',
-            'data' => $testimonial
-        ]);
+        return redirect()->back()->with('success', 'Testimonial added successfully!');
     }
 
     /**
@@ -92,11 +96,7 @@ class TestimonialController extends Controller
 
         $testimonial->update($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Testimonial updated successfully!',
-            'data' => $testimonial
-        ]);
+        return redirect()->back()->with('success', 'Testimonial updated successfully!');
     }
 
     /**
@@ -104,12 +104,14 @@ class TestimonialController extends Controller
      */
     public function destroy(Testimonial $testimonial)
     {
+        // Delete photo if exists
+        if ($testimonial->photo) {
+            $this->imageService->deleteImage($testimonial->photo);
+        }
+
         $testimonial->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Testimonial deleted successfully!'
-        ]);
+        return redirect()->back()->with('success', 'Testimonial deleted successfully!');
     }
 
     /**
@@ -139,9 +141,6 @@ class TestimonialController extends Controller
             $sibling->save();
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Order updated successfully!'
-        ]);
+        return redirect()->back()->with('success', 'Order updated successfully!');
     }
 }

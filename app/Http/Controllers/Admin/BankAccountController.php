@@ -21,8 +21,15 @@ class BankAccountController extends Controller
      */
     public function index()
     {
-        $banks = BankAccount::all();
-        return response()->json($banks);
+        $bankAccounts = BankAccount::orderBy('id', 'desc')->get();
+
+        // Check if request is AJAX/JSON
+        if (request()->wantsJson()) {
+            return response()->json($bankAccounts);
+        }
+
+        // Return view with bank accounts data for server-side rendering
+        return view('admin.bank-accounts.index', compact('bankAccounts'));
     }
 
     /**
@@ -36,7 +43,6 @@ class BankAccountController extends Controller
             'account_holder' => 'required|string|max:255',
             'bank_logo' => 'nullable|image|mimes:jpg,jpeg,png|max:512',
             'qris_image' => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
-
         ]);
 
         $data = $request->only(['bank_name', 'account_number', 'account_holder']);
@@ -51,13 +57,11 @@ class BankAccountController extends Controller
             $data['qris_image'] = $this->imageService->uploadQrisImage($request->file('qris_image'));
         }
 
+        $data['is_active'] = $request->input('is_active', 1);
+
         $bank = BankAccount::create($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Bank account added successfully!',
-            'data' => $bank
-        ]);
+        return redirect()->back()->with('success', 'Bank account added successfully!');
     }
 
     /**
@@ -88,23 +92,25 @@ class BankAccountController extends Controller
             $data['is_active'] = $request->is_active;
         }
 
-        // Ganti Bank Logo
+        // Replace Bank Logo if uploaded
         if ($request->hasFile('bank_logo')) {
-            $data['bank_logo'] = $this->imageService->uploadBankLogo($request->file('bank_logo'), $bankAccount->bank_logo);
+            $data['bank_logo'] = $this->imageService->uploadBankLogo(
+                $request->file('bank_logo'),
+                $bankAccount->bank_logo
+            );
         }
 
-        // Ganti QRIS image
+        // Replace QRIS image if uploaded
         if ($request->hasFile('qris_image')) {
-            $data['qris_image'] = $this->imageService->uploadQrisImage($request->file('qris_image'), $bankAccount->qris_image);
+            $data['qris_image'] = $this->imageService->uploadQrisImage(
+                $request->file('qris_image'),
+                $bankAccount->qris_image
+            );
         }
 
         $bankAccount->update($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Bank account updated successfully!',
-            'data' => $bankAccount
-        ]);
+        return redirect()->back()->with('success', 'Bank account updated successfully!');
     }
 
     /**
@@ -112,11 +118,17 @@ class BankAccountController extends Controller
      */
     public function destroy(BankAccount $bankAccount)
     {
+        // Delete images if exist
+        if ($bankAccount->bank_logo) {
+            $this->imageService->deleteImage($bankAccount->bank_logo);
+        }
+
+        if ($bankAccount->qris_image) {
+            $this->imageService->deleteImage($bankAccount->qris_image);
+        }
+
         $bankAccount->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Bank account deleted successfully!'
-        ]);
+        return redirect()->back()->with('success', 'Bank account deleted successfully!');
     }
 }
