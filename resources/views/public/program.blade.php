@@ -188,35 +188,102 @@
                             <h5 class="card-title">Hubungi Kami</h5>
 
                             {{-- TELEPON --}}
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-telephone fs-5 me-2"></i>
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="bi bi-telephone fs-5 me-2 mt-1"></i>
                                 <div class="form-control-plaintext border rounded p-2 bg-light flex-grow-1">
-                                    @php
-                                        $phoneSetting = App\Models\Setting::where('key', 'office_phone')->first();
-                                    @endphp
-                                    <a href="tel:+{{ $settings['office_phone'] }}" class="text-decoration-none">
-                                        {{ $phoneSetting ? $phoneSetting->formatted_office_phone : $settings['office_phone'] ?? 'Telepon belum diatur' }}
-                                    </a>
+
+                                    @if (isset($phones) && !empty($phones))
+                                        @foreach ($phones as $index => $ph)
+                                            <div class="pb-1 mb-1 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                                <a href="tel:+{{ $ph['raw'] }}"
+                                                    class="text-decoration-none 
+                       {{ $ph['is_primary'] ? 'fw-bold text-dark' : 'text-muted' }}">
+
+                                                    {{ $ph['formatted'] }}
+
+                                                    @if ($ph['is_primary'])
+                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    @elseif(isset($settings['office_phone']))
+                                        {{-- Legacy fallback --}}
+                                        @php
+                                            $phoneSetting = App\Models\Setting::where('key', 'office_phone')->first();
+                                        @endphp
+                                        <a href="tel:+{{ $settings['office_phone'] }}" class="text-decoration-none">
+                                            {{ $phoneSetting ? $phoneSetting->formatted_office_phone : $settings['office_phone'] }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Telepon belum diatur</span>
+                                    @endif
+
                                 </div>
                             </div>
+
 
                             {{-- EMAIL --}}
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-envelope fs-5 me-2"></i>
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="bi bi-envelope fs-5 me-2 mt-1"></i>
                                 <div class="form-control-plaintext border rounded p-2 bg-light flex-grow-1">
-                                    <a href="mailto:{{ $settings['office_email'] }}" class="text-decoration-none">
-                                        {{ $settings['office_email'] ?? 'Email belum diatur' }}
-                                    </a>
+
+                                    @if (isset($emails) && !empty($emails))
+                                        @foreach ($emails as $em)
+                                            <div class="pb-1 mb-1 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                                <a href="mailto:{{ $em['value'] }}"
+                                                    class="text-decoration-none
+                       {{ $em['is_primary'] ? 'fw-bold text-dark' : 'text-muted' }}">
+
+                                                    {{ $em['value'] }}
+
+                                                    @if ($em['is_primary'])
+                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    @elseif(isset($settings['office_email']))
+                                        <a href="mailto:{{ $settings['office_email'] }}" class="text-decoration-none">
+                                            {{ $settings['office_email'] }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted fst-italic">Email belum diatur</span>
+                                    @endif
+
                                 </div>
                             </div>
 
+
+
                             {{-- ALAMAT --}}
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-geo-alt fs-5 me-2"></i>
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="bi bi-geo-alt fs-5 me-2 mt-1"></i>
                                 <div class="form-control-plaintext border rounded p-2 bg-light flex-grow-1">
-                                    {{ $settings['office_address'] ?? 'Alamat belum diatur' }}
+
+                                    @if (isset($addresses) && !empty($addresses))
+                                        @foreach ($addresses as $addr)
+                                            <div class="pb-1 mb-1 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                                <span
+                                                    class="{{ $addr['is_primary'] ? 'fw-bold text-dark' : 'text-muted' }}">
+                                                    {{ $addr['value'] }}
+                                                </span>
+
+                                                @if ($addr['is_primary'])
+                                                    <i class="bi bi-star-fill text-warning"></i>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @elseif(isset($settings['office_address']))
+                                        {{ $settings['office_address'] }}
+                                    @else
+                                        <span class="text-muted fst-italic">Alamat belum diatur</span>
+                                    @endif
+
                                 </div>
                             </div>
+
+
 
                         </div>
 
