@@ -521,9 +521,9 @@
             font-size: 1rem;
             font-weight: 600;
             border-radius: 10px;
-            border: none !important;
-            background: linear-gradient(135deg, #0d6efd 0%, #2034c9 100%) !important;
-            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3) !important;
+            border: none;
+            background: linear-gradient(135deg, #0d6efd 0%, #2034c9 100%);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;

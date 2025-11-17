@@ -10,6 +10,8 @@ use App\Services\SettingService;
 use App\Models\Team;
 use App\Models\Testimonial;
 use App\Models\BankAccount;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactNotification;
 
 class PublicController extends Controller
 {
@@ -146,15 +148,15 @@ class PublicController extends Controller
 
     public function submitContact(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
 
-        // Here you would typically send an email or save to database
-        // For now, we'll just redirect with a success message
+        // Kirim email ke admin (email Anda)
+        Mail::to('namaemail@domainanda.com')->send(new ContactNotification($validated));
 
         return redirect()->route('contact')
             ->with('success', 'Pesan Anda telah terkirim. Kami akan segera menghubungi Anda.');

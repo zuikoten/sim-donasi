@@ -47,17 +47,20 @@
         }
 
         /* PREMIUM LOGIN BUTTON */
-        .premium-btn {
+        .premium-btn-login {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(8px);
+            font-weight: 500;
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.4);
             transition: all 0.3s ease;
         }
 
-        .premium-btn:hover {
+        .premium-btn-login:hover {
             background: rgba(255, 255, 255, 0.35);
             transform: scale(1.05);
+            font-weight: bolder;
+            color: #0800a9;
         }
 
         /* SHRINK ON SCROLL */
@@ -110,7 +113,7 @@
 
                     @guest
                         <li class="nav-item ms-3 mt-3 mt-lg-0">
-                            <a href="{{ route('login') }}" class="btn premium-btn px-4 py-2 rounded-pill">
+                            <a href="{{ route('login') }}" class="btn premium-btn-login px-4 py-2 rounded-pill">
                                 Login
                             </a>
                         </li>
