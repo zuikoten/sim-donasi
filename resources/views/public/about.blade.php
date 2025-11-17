@@ -37,7 +37,7 @@
     <section class="py-5 bg-light">
         <div class="container">
             <div class="row text-center mb-5">
-                <h2 class="fw-bold display-6">Misi & Visi Kami</h2>
+                <h2 class="fw-bold display-6">Visi & Misi Kami</h2>
                 <p class="lead text-muted">Fondasi yang menjadi arah langkah kami dalam menebar manfaat.</p>
             </div>
 
@@ -217,7 +217,7 @@
     <style>
         /* HERO SECTION */
         .hero-section-about {
-            background: linear-gradient(135deg, #0d6efd 0%, #1a73e8 50%, #0a58ca 100%);
+            background: linear-gradient(135deg, #0d6efd 0%, #2034c9 100%);
             color: #fff;
             padding: 80px 0 100px;
             position: relative;
@@ -393,7 +393,7 @@
     <!-- Call To Action Section-->
     <style>
         .cta-section {
-            background: linear-gradient(135deg, #0056b3, #007bff);
+            background: linear-gradient(135deg, #0d6efd 0%, #2034c9 100%);
             border-radius: 0;
             overflow: hidden;
         }

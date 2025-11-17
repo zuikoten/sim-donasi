@@ -364,7 +364,7 @@
     <style>
         /* HERO PREMIUM */
         .hero-section {
-            background: linear-gradient(135deg, #0d6efd 0%, #1a73e8 50%, #0a58ca 100%);
+            background: linear-gradient(135deg, #0d6efd 0%, #2034c9 100%);
             padding: 90px 0 110px;
             color: #fff;
             position: relative;

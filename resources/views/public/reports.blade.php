@@ -4,17 +4,22 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="bg-primary text-white py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12 text-center">
-                    <h1 class="display-4 fw-bold">Laporan Transparansi</h1>
-                    <p class="lead">Komitmen kami adalah memberikan kejelasan atas setiap donasi yang Anda percayakan
-                        kepada kami.</p>
+    <section class="hero-report-section text-white py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-10">
+                    <h1 class="display-4 fw-bold mb-3 hero-title">
+                        Laporan Transparansi
+                    </h1>
+                    <p class="lead hero-subtitle">
+                        Komitmen kami adalah memberikan kejelasan atas setiap donasi yang Anda percayakan
+                        kepada kami.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
+
 
     <!-- Statistics Section -->
     <section class="py-5">
@@ -38,7 +43,7 @@
                 <div class="col-md-3 col-6">
                     <div class="stat-card">
                         <div class="stat-icon bg-success bg-opacity-10 text-success">
-                            <i class="bi bi-piggy-bank-fill"></i>
+                            <i class="bi bi-cash-coin"></i>
                         </div>
                         <h2 class="stat-number text-success">
                             Rp {{ number_format($totalDonations, 0, ',', '.') }}
@@ -51,7 +56,7 @@
                 <div class="col-md-3 col-6">
                     <div class="stat-card">
                         <div class="stat-icon bg-info bg-opacity-10 text-info">
-                            <i class="bi bi-cash-stack"></i>
+                            <i class="bi bi-send-check-fill"></i>
                         </div>
                         <h2 class="stat-number text-info">
                             Rp {{ number_format($totalDistributed, 0, ',', '.') }}
@@ -258,7 +263,41 @@
 @endsection
 
 @push('styles')
-    <!-- -->
+    <!-- HERO SECTION -->
+    <style>
+        /* HERO SECTION STYLE */
+        .hero-report-section {
+            background: linear-gradient(135deg, #0d6efd 0%, #2034c9 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Glow gradient overlay */
+        .hero-report-section::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 280px;
+            height: 280px;
+            background: rgba(255, 255, 255, 0.18);
+            filter: blur(80px);
+            border-radius: 50%;
+        }
+
+        /* Heading Shine */
+        .hero-title {
+            text-shadow: 0 5px 18px rgba(0, 0, 0, 0.25);
+            letter-spacing: 0.5px;
+        }
+
+        .hero-subtitle {
+            opacity: 0.92;
+            font-weight: 300;
+        }
+    </style>
+
+    <!-- Statistik Section -->
     <style>
         .stat-card {
             background: rgba(255, 255, 255, 0.65);
