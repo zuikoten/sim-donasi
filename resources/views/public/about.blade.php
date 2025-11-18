@@ -416,6 +416,7 @@
             background: #f8f9fa;
             transform: translateY(-3px);
             box-shadow: 0 8px 18px rgba(255, 255, 255, 0.5);
+            transition: transform .25s;
         }
 
         .cta-section .btn-outline-light:hover {
@@ -423,10 +424,14 @@
             color: #0d6efd !important;
             transform: translateY(-3px);
             box-shadow: 0 8px 18px rgba(255, 255, 255, 0.5);
+            transition: transform .25s;
         }
 
         .cta-section .btn {
-            transition: .3s ease;
+            padding: 12px 26px;
+            border-radius: 999px;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(255, 255, 255, 0.06);
         }
     </style>
 @endpush

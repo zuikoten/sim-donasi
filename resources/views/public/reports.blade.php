@@ -214,13 +214,17 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination Summary -->
-                <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
-                    <span class="text-muted">
-                        Menampilkan {{ $programs->firstItem() }} – {{ $programs->lastItem() }}
-                        dari {{ $programs->total() }} program.
-                    </span>
-                    {{ $programs->links() }}
+                <!-- Informasi Pagination -->
+                <div class="pagination-wrapper">
+                    <div class="pagination-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Menampilkan <strong>{{ $programs->firstItem() }}</strong> hingga
+                        <strong>{{ $programs->lastItem() }}</strong> dari
+                        <strong>{{ $programs->total() }}</strong> program
+                    </div>
+                    <div class="pagination-links">
+                        {{ $programs->links() }}
+                    </div>
                 </div>
             @else
                 <div class="text-center py-5">
@@ -427,6 +431,57 @@
             color: #fff;
             transform: translateY(-3px);
             box-shadow: 0 10px 28px rgba(13, 110, 253, 0.45);
+        }
+    </style>
+
+    <style>
+        /* Pagination Wrapper */
+        .pagination-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            color: #64748b;
+            font-size: 0.9375rem;
+        }
+
+        .pagination-info strong {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .pagination-links .pagination {
+            margin: 0;
+        }
+
+        .pagination-links .page-link {
+            border: none;
+            border-radius: 8px;
+            margin: 0 0.25rem;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-links .page-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .pagination-links .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
     </style>
 @endpush

@@ -58,7 +58,8 @@
                             required>
                             <option value="" selected disabled>-- Pilih Role --</option>
                             @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                <option value="{{ $role->id }}"
+                                    {{ old('role_id') == $role->id || $role->name == 'donatur' ? 'selected' : '' }}>
                                     {{ $role->name }}</option>
                             @endforeach
                         </select>

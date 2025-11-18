@@ -148,62 +148,78 @@
                 <div class="row" id="programs-container">
                     @foreach ($programs as $program)
                         <div class="col-lg-4 col-md-6 mb-4 program-item" data-category="{{ $program->kategori }}">
-                            <div class="card h-100 program-card">
-                                <!-- Gambar Custom -->
-                                @if ($program->gambar)
-                                    <img src="{{ Storage::url($program->gambar) }}" class="card-img-top"
-                                        alt="{{ $program->nama_program }}" style="height: 250px; object-fit: cover;">
-                                @else
-                                    <img src="https://picsum.photos/seed/{{ $program->id }}/400/250.jpg"
-                                        class="card-img-top" alt="{{ $program->nama_program }}"
-                                        style="height: 250px; object-fit: cover;">
-                                @endif
+                            <div class="card h-100 modern-program-card">
+                                <!-- Image Container with Overlay -->
+                                <div class="program-image-container">
+                                    @if ($program->gambar)
+                                        <img src="{{ Storage::url($program->gambar) }}" class="card-img-top"
+                                            alt="{{ $program->nama_program }}">
+                                    @else
+                                        <img src="https://picsum.photos/seed/{{ $program->id }}/400/250.jpg"
+                                            class="card-img-top" alt="{{ $program->nama_program }}">
+                                    @endif
 
-                                <div class="card-body d-flex flex-column">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="badge bg-primary">{{ $program->kategori }}</span>
+                                    <!-- Gradient Overlay on hover -->
+                                    <div class="image-overlay"></div>
+
+                                    <!-- Status Badge Floating -->
+                                    <div class="floating-badge">
+                                        <span class="badge badge-category">
+                                            <i class="bi bi-folder me-1"></i>{{ $program->kategori }}
+                                        </span>
                                         @if ($program->donations_count > 0)
-                                            <span class="badge bg-success">
+                                            <span class="badge badge-donors">
                                                 <i class="bi bi-people-fill me-1"></i>{{ $program->donations_count }}
                                                 Donatur
                                             </span>
                                         @endif
                                     </div>
+                                </div>
 
-                                    <h5 class="card-title">{{ $program->nama_program }}</h5>
-                                    <p class="card-text text-muted">{{ Str::limit($program->deskripsi, 100) }}</p>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="program-title">{{ $program->nama_program }}</h5>
+                                    <p class="program-description">{{ Str::limit($program->deskripsi, 100) }}</p>
 
                                     <div class="mt-auto">
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span class="fw-bold">Terkumpul</span>
-                                            <span
-                                                class="text-primary fw-bold">{{ number_format($program->progress_percentage, 1) }}%</span>
-                                        </div>
-                                        <div class="progress mb-3" style="height: 10px;">
-                                            <div class="progress-bar bg-success" role="progressbar"
-                                                style="width: {{ min(100, $program->progress_percentage) }}%"
-                                                aria-valuenow="{{ $program->progress_percentage }}" aria-valuemin="0"
-                                                aria-valuemax="100">
+                                        <!-- Progress Section -->
+                                        <div class="progress-section">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="progress-label">Terkumpul</span>
+                                                <span
+                                                    class="progress-percentage">{{ number_format($program->progress_percentage, 1) }}%</span>
                                             </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between mb-3">
-                                            <div>
-                                                <small class="text-muted d-block">Terkumpul</small>
-                                                <strong class="text-success">Rp
-                                                    {{ number_format($program->donations_sum_nominal ?? 0, 0, ',', '.') }}</strong>
-                                            </div>
-                                            <div class="text-end">
-                                                <small class="text-muted d-block">Target</small>
-                                                <strong>Rp {{ number_format($program->target_dana, 0, ',', '.') }}</strong>
+                                            <div class="modern-progress-wrapper">
+                                                <div class="modern-progress-bar"
+                                                    style="width: {{ min(100, $program->progress_percentage) }}%"
+                                                    data-progress="{{ $program->progress_percentage }}">
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex gap-2">
+                                        <!-- Amount Display -->
+                                        <div class="amount-section">
+                                            <div class="amount-item">
+                                                <small class="amount-label">Terkumpul</small>
+                                                <strong class="amount-value amount-collected">
+                                                    Rp
+                                                    {{ number_format($program->donations_sum_nominal ?? 0, 0, ',', '.') }}
+                                                </strong>
+                                            </div>
+                                            <div class="amount-item text-end">
+                                                <small class="amount-label">Target</small>
+                                                <strong class="amount-value">
+                                                    Rp {{ number_format($program->target_dana, 0, ',', '.') }}
+                                                </strong>
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Buttons -->
+                                        <div class="action-buttons">
                                             <a href="{{ route('program.detail', $program->id) }}"
-                                                class="btn btn-outline-primary flex-fill">
-                                                <i class="bi bi-info-circle me-1"></i>Detail
+                                                class="btn btn-modern-outline-card">
+                                                <i class="bi bi-eye me-1"></i>Detail
                                             </a>
-                                            <a href="{{ route('login') }}" class="btn btn-primary flex-fill">
+                                            <a href="{{ route('login') }}" class="btn btn-modern-primary-card">
                                                 <i class="bi bi-heart-fill me-1"></i>Donasi
                                             </a>
                                         </div>
@@ -215,19 +231,30 @@
                 </div>
 
                 <!-- Informasi Pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-4 mb-4 flex-wrap">
-                    <span class="text-muted mb-2 mb-md-0">
-                        Menampilkan {{ $programs->firstItem() }} hingga {{ $programs->lastItem() }} dari
-                        {{ $programs->total() }} program.
-                    </span>
-                    {{ $programs->links() }}
+                <div class="pagination-wrapper">
+                    <div class="pagination-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Menampilkan <strong>{{ $programs->firstItem() }}</strong> hingga
+                        <strong>{{ $programs->lastItem() }}</strong> dari
+                        <strong>{{ $programs->total() }}</strong> program
+                    </div>
+                    <div class="pagination-links">
+                        {{ $programs->links() }}
+                    </div>
                 </div>
             @else
-                <div class="text-center py-5">
-                    <div class="alert alert-info d-inline-block">
-                        <i class="bi bi-info-circle me-2"></i>
-                        Belum ada program donasi untuk kategori <strong>{{ ucfirst($category) }}</strong> saat ini.
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-inbox"></i>
                     </div>
+                    <h4 class="empty-state-title">Belum Ada Program</h4>
+                    <p class="empty-state-text">
+                        Belum ada program donasi untuk kategori <strong>{{ ucfirst($category) }}</strong> saat ini.
+                    </p>
+                    <a href="{{ route('home') }}" class="btn btn-modern-primary">
+                        <i class="bi bi-house me-2"></i>Kembali ke Beranda
+                    </a>
                 </div>
             @endif
 
@@ -499,34 +526,6 @@
             font-size: 1rem;
         }
 
-        /* Program Card Hover Effect */
-        .program-card {
-            transition: all 0.3s ease;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .program-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .program-card .card-img-top {
-            transition: all 0.3s ease;
-        }
-
-        .program-card:hover .card-img-top {
-            transform: scale(1.05);
-        }
-
-        .program-card .card-img-top {
-            overflow: hidden;
-        }
-
-        /* Progress bar animation */
-        .progress-bar {
-            transition: width 1s ease-in-out;
-        }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -720,6 +719,457 @@
         /* Active: sedikit turun */
         .btn-premium-report:active {
             transform: translateY(1px) scale(0.99);
+        }
+    </style>
+
+    <!-- program grid modern style-->
+    <style>
+        /* Modern Program Card */
+        .modern-program-card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            position: relative;
+        }
+
+        .modern-program-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modern-program-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.25);
+        }
+
+        .modern-program-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Image Container */
+        .program-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 250px;
+            background: #f8f9fa;
+        }
+
+        .program-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modern-program-card:hover .program-image-container img {
+            transform: scale(1.1);
+        }
+
+        /* Image Overlay */
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modern-program-card:hover .image-overlay {
+            opacity: 1;
+        }
+
+        /* Floating Badges */
+        .floating-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            z-index: 2;
+        }
+
+        .badge-category,
+        .badge-donors {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .badge-category {
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+        }
+
+        .badge-donors {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+
+        .modern-program-card:hover .badge-category,
+        .modern-program-card:hover .badge-donors {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Card Body */
+        .modern-program-card .card-body {
+            padding: 1.75rem;
+        }
+
+        /* Program Title */
+        .program-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color 0.3s ease;
+        }
+
+        .modern-program-card:hover .program-title {
+            color: #667eea;
+        }
+
+        /* Program Description */
+        .program-description {
+            color: #718096;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .progress-percentage {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Modern Progress Bar */
+        .modern-progress-wrapper {
+            height: 12px;
+            background: #f1f3f5;
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .modern-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+        }
+
+        .modern-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Amount Section */
+        .amount-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 1.25rem;
+        }
+
+        .amount-item {
+            flex: 1;
+        }
+
+        .amount-label {
+            display: block;
+            color: #64748b;
+            font-size: 0.8125rem;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .amount-value {
+            display: block;
+            color: #2d3748;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .amount-collected {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-modern-outline-card,
+        .btn-modern-primary-card {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-modern-outline-card {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-modern-outline-card:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-modern-primary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-modern-primary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Pagination Wrapper */
+        .pagination-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination-info {
+            color: #64748b;
+            font-size: 0.9375rem;
+        }
+
+        .pagination-info strong {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .pagination-links .pagination {
+            margin: 0;
+        }
+
+        .pagination-links .page-link {
+            border: none;
+            border-radius: 8px;
+            margin: 0 0.25rem;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-links .page-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .pagination-links .page-item.active .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-state-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .empty-state-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .empty-state-title {
+            color: #2d3748;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-state-text {
+            color: #64748b;
+            font-size: 1.0625rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-modern-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-modern-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pagination-wrapper {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .program-image-container {
+                height: 220px;
+            }
+
+            .modern-program-card .card-body {
+                padding: 1.5rem;
+            }
+
+            .amount-section {
+                padding: 0.875rem;
+            }
+
+            .amount-value {
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Animation on Scroll (Optional) */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .program-item {
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .program-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .program-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .program-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .program-item:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .program-item:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .program-item:nth-child(6) {
+            animation-delay: 0.6s;
         }
     </style>
 @endpush
