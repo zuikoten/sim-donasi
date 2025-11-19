@@ -78,8 +78,10 @@
 
             <!-- LOGO -->
             <a class="navbar-brand d-flex align-items-center text-white" href="{{ route('home') }}">
-                <img src="{{ asset('storage/' . $settings['logo']) : asset('images/default-logo.png')}}" alt="Logo" height="52"
-                    class="me-2 rounded">
+                <img src="{{ isset($settings['logo']) && $settings['logo']
+                    ? asset('storage/' . $settings['logo'])
+                    : asset('images/default-logo.png') }}"
+                    alt="Logo" height="52" class="me-2 rounded">
                 <span class="fw-bold" style="font-size: 1.35rem;">
                     {{ $settings['site_title'] ?? 'Sistem Donasi' }}
                 </span>
