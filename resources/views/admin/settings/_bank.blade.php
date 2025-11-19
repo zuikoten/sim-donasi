@@ -43,9 +43,9 @@
                 <tr>
                     <td>
                         @if ($bank->bank_logo)
-                            <img src="{{ asset('storage/' . $bank->bank_logo) }}" alt="{{ $bank->bank_name }}"
+                            <img src="{{ asset('public/storage/' . $bank->bank_logo) }}" alt="{{ $bank->bank_name }}"
                                 class="rounded" style="width: 50px; height: 50px; object-fit: contain; cursor: pointer;"
-                                onclick="viewImage('{{ asset('storage/' . $bank->bank_logo) }}', '{{ $bank->bank_name }} Logo')">
+                                onclick="viewImage('{{ asset('public/storage/' . $bank->bank_logo) }}', '{{ $bank->bank_name }} Logo')">
                         @else
                             <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                 style="width: 50px; height: 50px;">
@@ -55,9 +55,9 @@
                     </td>
                     <td>
                         @if ($bank->qris_image)
-                            <img src="{{ asset('storage/' . $bank->qris_image) }}" alt="QRIS {{ $bank->bank_name }}"
+                            <img src="{{ asset('public/storage/' . $bank->qris_image) }}" alt="QRIS {{ $bank->bank_name }}"
                                 class="rounded" style="width: 50px; height: 50px; object-fit: contain; cursor: pointer;"
-                                onclick="viewImage('{{ asset('storage/' . $bank->qris_image) }}', 'QRIS {{ $bank->bank_name }}')">
+                                onclick="viewImage('{{ asset('public/storage/' . $bank->qris_image) }}', 'QRIS {{ $bank->bank_name }}')">
                         @else
                             <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                 style="width: 50px; height: 50px;">
@@ -232,14 +232,14 @@
                     // Show existing bank logo preview
                     if (bank.bank_logo) {
                         const logoPreview = document.getElementById('bank_logo_preview');
-                        logoPreview.src = '/storage/' + bank.bank_logo;
+                        logoPreview.src = '/public/storage/' + bank.bank_logo;
                         logoPreview.classList.remove('d-none');
                     }
 
                     // Show existing QRIS preview
                     if (bank.qris_image) {
                         const qrisPreview = document.getElementById('qris_image_preview');
-                        qrisPreview.src = '/storage/' + bank.qris_image;
+                        qrisPreview.src = '/public/storage/' + bank.qris_image;
                         qrisPreview.classList.remove('d-none');
                     }
 

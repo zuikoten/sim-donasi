@@ -41,7 +41,7 @@
             @forelse($teams as $index => $team)
                 <tr>
                     <td>
-                        <img src="{{ $team->photo ? asset('storage/' . $team->photo) : asset('images/default-avatar.png') }}"
+                        <img src="{{ $team->photo ? asset('public/storage/' . $team->photo) : asset('images/default-avatar.png') }}"
                             alt="{{ $team->name }}" class="rounded"
                             style="width: 50px; height: 50px; object-fit: cover;">
                     </td>
@@ -200,7 +200,7 @@
                     // Show existing photo preview
                     if (team.photo) {
                         const preview = document.getElementById('team_photo_preview');
-                        preview.src = '/storage/' + team.photo;
+                        preview.src = '/public/storage/' + team.photo;
                         preview.classList.remove('d-none');
                     }
 

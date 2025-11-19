@@ -73,7 +73,7 @@
             <div class="view-mode">
                 <div class="border rounded p-3 bg-light">
                     @if (!empty($settings['favicon']))
-                        <img src="{{ asset('storage/' . $settings['favicon']) }}" alt="Current Favicon"
+                        <img src="{{ asset('public/storage/' . $settings['favicon']) }}" alt="Current Favicon"
                             class="img-thumbnail" style="max-width: 64px; max-height: 64px;">
                         <div class="mt-2">
                             <small class="text-muted">{{ basename($settings['favicon']) }}</small>
@@ -95,7 +95,7 @@
                 @if (!empty($settings['favicon']))
                     <div class="mt-2 position-relative">
                         <label class="form-label fw-semibold small">Current Favicon:</label>
-                        <img src="{{ asset('storage/' . $settings['favicon']) }}" alt="Current Favicon"
+                        <img src="{{ asset('public/storage/' . $settings['favicon']) }}" alt="Current Favicon"
                             class="img-thumbnail d-block" style="max-width: 64px; max-height: 64px;"
                             id="favicon-current">
                     </div>
@@ -127,7 +127,7 @@
             <div class="view-mode">
                 <div class="border rounded p-3 bg-light">
                     @if (!empty($settings['logo']))
-                        <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Current Logo" class="img-thumbnail"
+                        <img src="{{ asset('public/storage/' . $settings['logo']) }}" alt="Current Logo" class="img-thumbnail"
                             style="max-width: 200px; max-height: 100px;">
                         <div class="mt-2">
                             <small class="text-muted">{{ basename($settings['logo']) }}</small>
@@ -149,7 +149,7 @@
                 @if (!empty($settings['logo']))
                     <div class="mt-2 position-relative">
                         <label class="form-label fw-semibold small">Current Logo:</label>
-                        <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Current Logo"
+                        <img src="{{ asset('public/storage/' . $settings['logo']) }}" alt="Current Logo"
                             class="img-thumbnail d-block" style="max-width: 200px; max-height: 100px;"
                             id="logo-current">
                     </div>

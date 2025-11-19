@@ -42,7 +42,7 @@
             @forelse($testimonials as $index => $testimonial)
                 <tr>
                     <td>
-                        <img src="{{ $testimonial->photo ? asset('storage/' . $testimonial->photo) : asset('images/default-avatar.png') }}"
+                        <img src="{{ $testimonial->photo ? asset('public/storage/' . $testimonial->photo) : asset('images/default-avatar.png') }}"
                             alt="{{ $testimonial->name }}" class="rounded-circle"
                             style="width: 50px; height: 50px; object-fit: cover;">
                     </td>
@@ -256,7 +256,7 @@
                     // Show existing photo preview
                     if (testimonial.photo) {
                         const preview = document.getElementById('testimonial_photo_preview');
-                        preview.src = '/storage/' + testimonial.photo;
+                        preview.src = '/public/storage/' + testimonial.photo;
                         preview.classList.remove('d-none');
                     }
 
@@ -275,7 +275,7 @@
                 .then(response => response.json())
                 .then(testimonial => {
                     // Set photo
-                    const photoUrl = testimonial.photo ? '/storage/' + testimonial.photo : '/images/default-avatar.png';
+                    const photoUrl = testimonial.photo ? '/public/storage/' + testimonial.photo : '/images/default-avatar.png';
                     document.getElementById('view_photo').src = photoUrl;
 
                     // Set name and role
