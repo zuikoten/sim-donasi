@@ -346,7 +346,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="ratio ratio-16x9">
-                        {!! $settings['google_maps_embed'] !!}
+                        {!! $settings['google_maps_embed'] ?? 'Google Maps Belum Diatur' !!}
                     </div>
                 </div>
             </div>
