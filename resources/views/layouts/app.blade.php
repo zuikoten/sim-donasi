@@ -76,7 +76,6 @@
             padding: 0.375rem 0.75rem;
             font-size: 0.875rem;
         }
-
     </style>
 </head>
 
@@ -95,7 +94,7 @@
                     <i class="bi bi-list fs-4"></i>
                 </button>
                 @if (setting('logo'))
-                    <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo"
+                    <img src="{{ asset('public/storage/' . $settings['logo']) }}" alt="Logo"
                         style="height: 40px; margin-right: 2px;">
                 @endif
                 <a class="navbar-brand" href="{{ route('dashboard') }}">
