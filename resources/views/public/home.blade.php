@@ -29,7 +29,7 @@
 
                 <!-- IMAGE -->
                 <div class="col-lg-6 text-center">
-                    <img src="{{ asset('images/charity.webp') }}" alt="Ilustrasi Donasi" class="hero-img">
+                    <img src="{{ asset('public/images/charity.webp') }}" alt="Ilustrasi Donasi" class="hero-img">
                 </div>
 
             </div>
