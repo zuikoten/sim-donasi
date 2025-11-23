@@ -252,8 +252,8 @@
                     <p class="empty-state-text">
                         Belum ada program donasi untuk kategori <strong>{{ ucfirst($category) }}</strong> saat ini.
                     </p>
-                    <a href="{{ route('home') }}" class="btn btn-modern-primary">
-                        <i class="bi bi-house me-2"></i>Kembali ke Beranda
+                    <a href="{{ route('programs.create') }}" class="btn btn-modern-primary">
+                        <i class="bi bi-plus-circle-fill me-2"></i>Tambah Program Baru
                     </a>
                 </div>
             @endif
