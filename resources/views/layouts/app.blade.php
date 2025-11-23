@@ -16,7 +16,7 @@
     {{-- Dynamic Favicon --}}
     @if (setting('favicon'))
         @php
-            $faviconPath = asset('storage/' . setting('favicon'));
+            $faviconPath = asset('public/storage/' . setting('favicon'));
             $extension = pathinfo(setting('favicon'), PATHINFO_EXTENSION);
             $mimeType = match ($extension) {
                 'png' => 'image/png',
