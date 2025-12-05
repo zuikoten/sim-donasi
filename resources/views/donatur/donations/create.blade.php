@@ -128,6 +128,16 @@
                     </div>
                 </div>
             </div>
+            <div class="modern-card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Rekening Donasi</h5>
+                    <x-bank-list :bankAccounts="$bankAccounts" />
+                    <div class="modern-alert mt-3">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <small>Setelah transfer, jangan lupa upload bukti transfer pada form donasi.</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
