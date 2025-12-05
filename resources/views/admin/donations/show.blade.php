@@ -46,7 +46,7 @@
                         </tr>
                         <tr>
                             <td><strong>Metode Pembayaran</strong></td>
-                            <td>{{ $donation->bankAccount->bank_name }}
+                            <td>{{ $donation->bankAccount->account_holder }}
                                 <small class="text-muted">({{ $donation->bankAccount->account_number }})</small>
                             </td>
                         </tr>

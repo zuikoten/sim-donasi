@@ -70,7 +70,7 @@
                                     <td>
                                         @if ($donation->bankAccount)
                                             <small class="text-muted"
-                                                style="font-size: smaller;">{{ $donation->bankAccount->bank_name }}</small><br>
+                                                style="font-size: smaller;">{{ $donation->bankAccount->account_holder }}</small><br>
                                             ({{ $donation->bankAccount->account_number }})
                                         @else
                                             <span class="text-muted">-</span>
