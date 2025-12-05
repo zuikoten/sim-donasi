@@ -38,7 +38,7 @@ class TestimonialController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
             'name' => 'required|string|max:255',
             'role' => 'nullable|string|max:255',
             'rating' => 'required|integer|min:1|max:5',
@@ -75,7 +75,7 @@ class TestimonialController extends Controller
     public function update(Request $request, Testimonial $testimonial)
     {
         $request->validate([
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
             'name' => 'required|string|max:255',
             'role' => 'nullable|string|max:255',
             'rating' => 'required|integer|min:1|max:5',
