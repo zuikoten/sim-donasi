@@ -159,18 +159,23 @@
                 allowClear: true,
                 minimumInputLength: 0,
                 ajax: {
-                    url: '{{ route('search.donatur') }}',
+                    url: '{{ route('donatur.search') }}',
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
+                        console.log('Searching for:', params.term); // DEBUG
                         return {
                             term: params.term || '',
                         };
                     },
                     processResults: function(data) {
+                        console.log('Results:', data); // DEBUG
                         return {
                             results: data
                         };
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Ajax error:', xhr.responseText); // DEBUG
                     },
                     cache: true
                 }

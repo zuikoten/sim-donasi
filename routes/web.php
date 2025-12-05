@@ -55,7 +55,7 @@ require __DIR__ . '/auth.php';
 Route::middleware(['auth'])->group(function () {
 
     // AJAX search Donatur
-    Route::get('/search-donatur', [DonaturController::class, 'search'])->name('search.donatur');
+    Route::get('/search-donatur', [DonaturController::class, 'search'])->name('donatur.search');
 
     // Breeze login
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
