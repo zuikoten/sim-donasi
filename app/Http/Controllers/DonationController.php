@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Donation;
 use App\Models\Program;
+use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class DonationController extends Controller
         $perPage = $request->input('perPage', 25);
 
         // Query dasar
-        $query = Donation::with(['user', 'program'])->orderBy('created_at', 'desc');
+        $query = Donation::with(['user', 'program', 'bankAccount'])->orderBy('created_at', 'desc');
 
         // Terapkan filter berdasarkan role
         if (!$user->isDonatur()) {
@@ -41,7 +42,9 @@ class DonationController extends Controller
     public function create()
     {
         $programs = Program::where('status', 'aktif')->get();
-        return view('donatur.donations.create', compact('programs'));
+        $bankAccounts = BankAccount::where('is_active', true)->get();
+
+        return view('donatur.donations.create', compact('programs', 'bankAccounts'));
     }
 
     public function store(Request $request)
@@ -54,6 +57,8 @@ class DonationController extends Controller
             'nominal.numeric' => 'Nominal donasi harus berupa angka.',
             'nominal.min' => 'Nilai donasi harus lebih besar daripada atau sama dengan Rp 1.000.',
             'metode_pembayaran.required' => 'Metode pembayaran wajib diisi.',
+            'bank_account_id.required' => 'Rekening bank tujuan wajib dipilih.',
+            'bank_account_id.exists' => 'Rekening bank yang dipilih tidak valid.',
             'bukti_transfer.required' => 'Bukti transfer wajib diupload.',
             'bukti_transfer.image' => 'File bukti transfer harus berupa gambar.',
             'bukti_transfer.mimes' => 'Format bukti transfer harus: jpeg, png, jpg, gif.',
@@ -64,6 +69,7 @@ class DonationController extends Controller
             'program_id' => 'required|exists:programs,id',
             'nominal' => 'required|numeric|min:1000',
             'metode_pembayaran' => 'required|in:Uang Tunai,Transfer Bank,QRIS,E-Wallet',
+            'bank_account_id' => 'required|exists:bank_accounts,id',
             'keterangan_tambahan' => 'nullable|string',
             'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], $messages);
@@ -81,6 +87,7 @@ class DonationController extends Controller
         $donation->program_id = $request->program_id;
         $donation->nominal = $request->nominal;
         $donation->metode_pembayaran = $request->metode_pembayaran;
+        $donation->bank_account_id = $request->bank_account_id;
         $donation->keterangan_tambahan = $request->keterangan_tambahan;
         $donation->status = 'menunggu';
 

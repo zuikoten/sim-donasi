@@ -51,6 +51,7 @@
                                 <th>Program</th>
                                 <th>Nominal</th>
                                 <th>Metode</th>
+                                <th>Rekening</th>
                                 <th>Status</th>
                                 <th>Bukti</th>
                                 <th>Aksi</th>
@@ -65,6 +66,16 @@
                                     <td>{{ $donation->program->nama_program }}</td>
                                     <td>Rp {{ number_format($donation->nominal, 0, ',', '.') }}</td>
                                     <td>{{ $donation->metode_pembayaran }}</td>
+                                    <!-- KOLOM BANK -->
+                                    <td>
+                                        @if ($donation->bankAccount)
+                                            {{ $donation->bankAccount->bank_name }}
+                                            <small
+                                                class="text-muted">({{ $donation->bankAccount->account_number }})</small>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ($donation->status === 'terverifikasi')
                                             <span class="badge bg-success">Terverifikasi</span>

@@ -45,6 +45,12 @@
                             <td>{{ $donation->metode_pembayaran }}</td>
                         </tr>
                         <tr>
+                            <td><strong>Metode Pembayaran</strong></td>
+                            <td>{{ $donation->bankAccount->bank_name }}
+                                <small class="text-muted">({{ $donation->bankAccount->account_number }})</small>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><strong>Status</strong></td>
                             <td>
                                 @if ($donation->status === 'terverifikasi')

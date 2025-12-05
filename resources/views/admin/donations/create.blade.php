@@ -68,6 +68,24 @@
                         @enderror
                     </div>
 
+                    <!-- PILIH REKENING BANK -->
+                    <div class="mb-4">
+                        <label for="bank_account_id" class="form-label fw-semibold">Rekening Bank Tujuan</label>
+                        <select class="form-select select2 @error('bank_account_id') is-invalid @enderror"
+                            id="bank_account_id" name="bank_account_id">
+                            <option value="" selected disabled>-- Pilih Rekening Bank --</option>
+                            @foreach ($bankAccounts as $bank)
+                                <option value="{{ $bank->id }}"
+                                    {{ old('bank_account_id') == $bank->id ? 'selected' : '' }}>
+                                    {{ $bank->bank_name }} - {{ $bank->account_number }} ({{ $bank->account_holder }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('bank_account_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <!-- STATUS -->
                     <div class="mb-4">
                         <label for="status" class="form-label fw-semibold">Status Donasi</label>
