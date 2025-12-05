@@ -14,6 +14,7 @@ class Donation extends Model
         'program_id',
         'nominal',
         'metode_pembayaran',
+        'bank_account_id',
         'keterangan_tambahan',
         'bukti_transfer',
         'status',
@@ -31,6 +32,11 @@ class Donation extends Model
     public function program()
     {
         return $this->belongsTo(Program::class);
+    }
+
+    public function bankAccount()
+    {
+        return $this->belongsTo(BankAccount::class);
     }
 
     protected static function booted()
