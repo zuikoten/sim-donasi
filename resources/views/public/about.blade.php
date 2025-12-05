@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="col-lg-6 text-center">
-                    <img src="{{ asset('public/images/gedung-ptd.jpg') }}" alt="About Us" class="hero-img-about">
+                    <img src="{{ asset('images/gedung-ptd.jpg') }}" alt="About Us" class="hero-img-about">
                 </div>
             </div>
         </div>

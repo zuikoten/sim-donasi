@@ -8,7 +8,7 @@
             <div class="text-center mb-4">
                 <div class="position-relative d-inline-block">
                     <img id="profile-photo"
-                        src="{{ $profile->foto ? asset('public/storage/' . $profile->foto) : asset('public/images/default-avatar.png') }}"
+                        src="{{ $profile->foto ? asset('storage/' . $profile->foto) : asset('images/default-avatar.png') }}"
                         class="rounded-circle border" style="width:150px; height:150px; object-fit:cover; cursor:pointer;"
                         alt="Foto Profil" data-bs-toggle="modal" data-bs-target="#photoModal">
                     <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2"

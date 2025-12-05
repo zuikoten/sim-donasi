@@ -33,7 +33,7 @@
                     <div class="text-center mb-4">
                         <div class="position-relative d-inline-block">
                             <img id="profile-photo"
-                                src="{{ $user->profile->foto ? asset('public/storage/' . $user->profile->foto) : asset('public/images/default-avatar.png') }}"
+                                src="{{ $user->profile->foto ? asset('storage/' . $user->profile->foto) : asset('images/default-avatar.png') }}"
                                 class="rounded-circle border" style="width:150px; height:150px; object-fit:cover;"
                                 alt="Foto Profil">
                         </div>
