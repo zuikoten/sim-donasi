@@ -69,7 +69,8 @@
                                     <!-- KOLOM BANK -->
                                     <td>
                                         @if ($donation->bankAccount)
-                                            <small class="text-muted">{{ $donation->bankAccount->bank_name }}</small><br>
+                                            <small class="text-muted"
+                                                style="font-size: smaller;">{{ $donation->bankAccount->bank_name }}</small><br>
                                             ({{ $donation->bankAccount->account_number }})
                                         @else
                                             <span class="text-muted">-</span>
