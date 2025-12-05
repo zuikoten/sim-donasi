@@ -113,30 +113,13 @@
                 <div class="card-body">
                     <h5 class="card-title">Informasi Rekening</h5>
                     <p>Silakan transfer ke salah satu rekening berikut:</p>
-                    <div class="mb-3">
-                        <h6>Bank BCA</h6>
-                        <p class="mb-0">No. Rekening: 1234567890</p>
-                        <p class="mb-0">a.n. Yayasan Contoh</p>
-                    </div>
-                    <div class="mb-3">
-                        <h6>Bank Mandiri</h6>
-                        <p class="mb-0">No. Rekening: 0987654321</p>
-                        <p class="mb-0">a.n. Yayasan Contoh</p>
-                    </div>
-                    <div class="alert alert-info">
-                        <small>Setelah transfer, upload bukti transfer pada form di samping.</small>
-                    </div>
-                </div>
-            </div>
-            <div class="modern-card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Rekening Donasi</h5>
                     <x-bank-list :bankAccounts="$bankAccounts" />
                     <div class="modern-alert mt-3">
                         <i class="bi bi-info-circle me-2"></i>
                         <small>Setelah transfer, jangan lupa upload bukti transfer pada form donasi.</small>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
