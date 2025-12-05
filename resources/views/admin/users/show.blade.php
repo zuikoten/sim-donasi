@@ -33,7 +33,7 @@
                     <div class="text-center mb-4">
                         <div class="position-relative d-inline-block">
                             <img id="profile-photo"
-                                src="{{ $user->profile->foto ? asset('storage/' . $user->profile->foto) : asset('images/default-avatar.png') }}"
+                                src="{{ $user->profile?->foto ? asset('storage/' . $user->profile->foto) : asset('images/default-avatar.png') }}"
                                 class="rounded-circle border" style="width:150px; height:150px; object-fit:cover;"
                                 alt="Foto Profil">
                         </div>
@@ -42,7 +42,7 @@
                     <table class="table table-borderless">
                         <tr>
                             <td width="30%"><strong>Nama Lengkap</strong></td>
-                            <td>{{ $user->profile->nama_lengkap ?? 'Belum Lengkapi Data Profil' }}
+                            <td>{{ $user->profile?->nama_lengkap ?? 'Belum Lengkapi Data Profil' }}
                             </td>
                         </tr>
                         <tr>
@@ -55,15 +55,15 @@
                         </tr>
                         <tr>
                             <td><strong>No.Telepon</strong></td>
-                            <td>{{ $user->profile->no_telepon ?? 'Belum Lengkapi Data Profil' }}</td>
+                            <td>{{ $user->profile?->no_telepon ?? 'Belum Lengkapi Data Profil' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Tanggal Lahir</strong></td>
-                            <td>{{ $user->profile->tanggal_lahir_formatted ?? 'Belum Lengkapi Data Profil' }}</td>
+                            <td>{{ $user->profile?->tanggal_lahir_formatted ?? 'Belum Lengkapi Data Profil' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Alamat</strong></td>
-                            <td>{{ $user->profile->alamat ?? 'Belum Lengkapi Data Profil' }}</td>
+                            <td>{{ $user->profile?->alamat ?? 'Belum Lengkapi Data Profil' }}</td>
                         </tr>
                     </table>
                     <hr>
