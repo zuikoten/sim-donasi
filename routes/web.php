@@ -54,6 +54,9 @@ require __DIR__ . '/auth.php';
 // Protected routes
 Route::middleware(['auth'])->group(function () {
 
+    // AJAX search Donatur
+    Route::get('/search-donatur', [DonaturController::class, 'search'])->name('search.donatur');
+
     // Breeze login
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -122,9 +125,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/donations/create', [AdminDonationController::class, 'create'])->name('donations.create');
         Route::post('/donations/store', [AdminDonationController::class, 'store'])->name('donations.store');
     });
-
-    // AJAX search Donatur
-    Route::get('/search-donatur', [DonaturController::class, 'search'])->name('donatur.search');
 
     // ========== NEW: Settings Routes (Superadmin or Admin only) ==========
     Route::middleware(['role:superadmin,admin'])->prefix('admin')->name('admin.')->group(function () {
