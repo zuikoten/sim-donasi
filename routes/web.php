@@ -13,6 +13,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DonaturController;
+use App\Http\Controllers\SearchDonaturController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\AdminDonationController;
 
@@ -55,7 +56,7 @@ require __DIR__ . '/auth.php';
 Route::middleware(['auth'])->group(function () {
 
     // AJAX search Donatur
-    Route::get('/search-donatur', [DonaturController::class, 'search'])->name('donatur.search');
+    Route::get('/search-donatur', [SearchDonaturController::class, 'search'])->name('donatur.search');
 
     // Breeze login
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
