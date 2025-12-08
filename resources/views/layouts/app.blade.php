@@ -94,8 +94,10 @@
                     <i class="bi bi-list fs-4"></i>
                 </button>
                 @if (setting('logo'))
-                    <img src="{{ asset('storage/' . $settings['logo']) }}" alt="Logo"
-                        style="height: 40px; margin-right: 2px;">
+                    <img src="{{ isset($settings['logo']) && $settings['logo']
+                        ? asset('storage/' . $settings['logo'])
+                        : asset('images/default-logo.png') }}"
+                        alt="Logo" style="height: 40px; margin-right: 2px;">
                 @endif
                 <a class="navbar-brand" href="{{ route('dashboard') }}">
                     <h5 class="text-black text-center m-0">{{ setting('site_title', 'Sistem Donasi') }}</h5>

@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/donatur/dashboard', [DonaturController::class, 'dashboard'])->name('donatur.dashboard')->middleware('role:donatur');
 
         // Donations
-        Route::resource('donations', DonationController::class);
+        Route::resource('donations', DonationController::class)->except(['edit', 'update', 'destroy']);
         Route::post('/donations/{donation}/verify', [DonationController::class, 'verify'])->name('donations.verify');
     });
 
@@ -125,7 +125,13 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:superadmin,admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/donations/create', [AdminDonationController::class, 'create'])->name('donations.create');
         Route::post('/donations/store', [AdminDonationController::class, 'store'])->name('donations.store');
+        //Route::get('/donations/{id}/edit', [AdminDonationController::class, 'edit'])->name('donations.edit');
+        Route::put('/donations/{id}/update', [AdminDonationController::class, 'update'])->name('donations.update');
+        Route::delete('/donations/{id}/destroy', [AdminDonationController::class, 'destroy'])->name('donations.destroy');
+        Route::get('/donations/{id}/edit-form', [AdminDonationController::class, 'getEditForm'])->name('donations.edit-form');
     });
+
+
 
     // ========== NEW: Settings Routes (Superadmin or Admin only) ==========
     Route::middleware(['role:superadmin,admin'])->prefix('admin')->name('admin.')->group(function () {

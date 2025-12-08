@@ -22,10 +22,19 @@ class RoleSeeder extends Seeder
 
         // Create superadmin user
         User::create([
-            'name' => 'Super Admin',
+            'name' => 'SuperAdmin',
             'email' => 'superadmin@donasi.local',
             'password' => Hash::make('password'),
             'role_id' => $superadmin->id,
+            'status' => 'aktif',
+        ]);
+
+        // Create admin user
+        User::create([
+            'name' => 'Admin01',
+            'email' => 'admin01@donasi.local',
+            'password' => Hash::make('password'),
+            'role_id' => $admin->id,
             'status' => 'aktif',
         ]);
     }

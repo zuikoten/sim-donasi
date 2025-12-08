@@ -8,6 +8,7 @@ use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DonationController extends Controller
 {
@@ -42,9 +43,17 @@ class DonationController extends Controller
     public function create()
     {
         $programs = Program::where('status', 'aktif')->get();
-        $bankAccounts = BankAccount::where('is_active', true)->get();
 
-        return view('donatur.donations.create', compact('programs', 'bankAccounts'));
+        // Pisahkan Kas Tunai dan Bank Accounts
+        $kasTunai = BankAccount::where('is_cash', true)
+            ->where('is_active', true)
+            ->first();
+
+        $bankAccounts = BankAccount::where('is_cash', false)
+            ->where('is_active', true)
+            ->get();
+
+        return view('donatur.donations.create', compact('programs', 'kasTunai', 'bankAccounts'));
     }
 
     public function store(Request $request)
@@ -74,36 +83,78 @@ class DonationController extends Controller
             'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], $messages);
 
-        // Validasi tambahan setelah validasi utama
-        $program = \App\Models\Program::find($request->program_id);
-        if ($program && $request->nominal > $program->target_dana) {
+        DB::beginTransaction();
+        try {
+            // Extra validation: Jika Uang Tunai, harus Kas Tunai
+            if ($request->metode_pembayaran === 'Uang Tunai') {
+                $kasTunai = BankAccount::where('is_cash', true)->first();
+
+                if (!$kasTunai) {
+                    return back()
+                        ->with('error', 'Data Kas Tunai tidak ditemukan dalam sistem.')
+                        ->withInput();
+                }
+
+                if ($request->bank_account_id != $kasTunai->id) {
+                    return back()
+                        ->with('error', 'Untuk metode Uang Tunai, rekening harus "Kas Tunai".')
+                        ->withInput();
+                }
+            }
+
+            // Validation: Jika bukan Uang Tunai, tidak boleh pilih Kas Tunai
+            if ($request->metode_pembayaran !== 'Uang Tunai') {
+                $selectedAccount = BankAccount::find($request->bank_account_id);
+
+                if ($selectedAccount && $selectedAccount->is_cash) {
+                    return back()
+                        ->with('error', 'Kas Tunai hanya untuk metode pembayaran "Uang Tunai".')
+                        ->withInput();
+                }
+            }
+
+            // Validasi tambahan: nominal tidak boleh melebihi target dana
+            $program = Program::find($request->program_id);
+            if ($program && $request->nominal > $program->target_dana) {
+                return back()
+                    ->withErrors(['nominal' => 'Kendala Sistem: Nominal donasi tidak bisa melebihi target dana program (Rp ' . number_format($program->target_dana, 0, ',', '.') . ').'])
+                    ->withInput();
+            }
+
+            $donation = new Donation();
+            $donation->user_id = Auth::id();
+            $donation->program_id = $request->program_id;
+            $donation->nominal = $request->nominal;
+            $donation->metode_pembayaran = $request->metode_pembayaran;
+            $donation->bank_account_id = $request->bank_account_id;
+            $donation->keterangan_tambahan = $request->keterangan_tambahan;
+            $donation->status = 'menunggu'; // Donatur selalu status menunggu
+
+            if ($request->hasFile('bukti_transfer')) {
+                $path = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
+                $donation->bukti_transfer = $path;
+            }
+
+            $donation->save();
+
+            DB::commit();
+            return redirect()->route('donations.index')
+                ->with('success', 'Donasi berhasil dikirim. Menunggu verifikasi dari admin.');
+        } catch (\Exception $e) {
+            DB::rollBack();
             return back()
-                ->withErrors(['nominal' => 'Kendala Sistem: Nominal donasi tidak bisa melebihi target dana program (Rp ' . number_format($program->target_dana, 0, ',', '.') . ').'])
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
-
-        $donation = new Donation();
-        $donation->user_id = Auth::id();
-        $donation->program_id = $request->program_id;
-        $donation->nominal = $request->nominal;
-        $donation->metode_pembayaran = $request->metode_pembayaran;
-        $donation->bank_account_id = $request->bank_account_id;
-        $donation->keterangan_tambahan = $request->keterangan_tambahan;
-        $donation->status = 'menunggu';
-
-        if ($request->hasFile('bukti_transfer')) {
-            $path = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
-            $donation->bukti_transfer = $path;
-        }
-
-        $donation->save();
-
-        return redirect()->route('donations.index')
-            ->with('success', 'Donasi berhasil dikirim. Menunggu verifikasi dari admin.');
     }
 
     public function show(Donation $donation)
     {
+        // Donatur hanya bisa lihat donasi miliknya sendiri
+        if (Auth::user()->isDonatur() && $donation->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses ke donasi ini.');
+        }
+
         return view('admin.donations.show', compact('donation'));
     }
 
@@ -124,13 +175,25 @@ class DonationController extends Controller
 
     public function destroy(Donation $donation)
     {
-        if ($donation->bukti_transfer) {
-            Storage::disk('public')->delete($donation->bukti_transfer);
+        // Donatur tidak bisa delete donasi yang sudah terverifikasi
+        if (Auth::user()->isDonatur() && $donation->status === 'terverifikasi') {
+            return back()->with('error', 'Donasi yang sudah terverifikasi tidak dapat dihapus.');
         }
 
-        $donation->delete();
+        DB::beginTransaction();
+        try {
+            if ($donation->bukti_transfer && Storage::disk('public')->exists($donation->bukti_transfer)) {
+                Storage::disk('public')->delete($donation->bukti_transfer);
+            }
 
-        return redirect()->route('donations.index')
-            ->with('success', 'Donasi berhasil dihapus.');
+            $donation->delete();
+
+            DB::commit();
+            return redirect()->route('donations.index')
+                ->with('success', 'Donasi berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

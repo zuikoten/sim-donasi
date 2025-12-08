@@ -1,0 +1,548 @@
+{
+    "roles": [
+        {
+            "id": 1,
+            "name": "superadmin",
+            "created_at": "2025-10-06 07:21:24",
+            "updated_at": "2025-10-06 07:21:24"
+        },
+        {
+            "id": 2,
+            "name": "admin",
+            "created_at": "2025-10-06 07:21:24",
+            "updated_at": "2025-10-06 07:21:24"
+        },
+        {
+            "id": 3,
+            "name": "donatur",
+            "created_at": "2025-10-06 07:21:24",
+            "updated_at": "2025-10-06 07:21:24"
+        }
+    ],
+    "users": [
+        {
+            "id": 1,
+            "name": "Superadmin",
+            "email": "superadmin@donasi.local",
+            "email_verified_at": null,
+            "password": "$2y$12$IelPd4DWVqvXxSHvwgbGkORSUZgieFBihNrA\/Lfz5KCNzRL2AcXdq",
+            "role_id": 1,
+            "status": "aktif",
+            "remember_token": "VXxtpJbMS9QSldxDiGOuyHDulUlgrljjS38xdWmghRMOc39bVCAiynrYHksQ",
+            "created_at": "2025-10-06 07:21:25",
+            "updated_at": "2025-10-17 14:30:18",
+            "search_count": 0
+        },
+        {
+            "id": 3,
+            "name": "DonaturContoh",
+            "email": "donatur@donasi.local",
+            "email_verified_at": null,
+            "password": "$2y$12$4oQn2JxHub04atPQBSDhvuON5IjJutahGNLPvcA7qgZW8hXr8bOZ.",
+            "role_id": 3,
+            "status": "aktif",
+            "remember_token": null,
+            "created_at": "2025-10-08 08:17:29",
+            "updated_at": "2025-10-24 03:00:45",
+            "search_count": 1
+        },
+        {
+            "id": 5,
+            "name": "AndiSaputra",
+            "email": "andi@donasi.local",
+            "email_verified_at": null,
+            "password": "$2y$12$TQ9nPYbWYa6iVBdnaO53Y.aZETpptv74i8Yt57aeRmB1ympSZZJKq",
+            "role_id": 3,
+            "status": "aktif",
+            "remember_token": null,
+            "created_at": "2025-10-10 09:00:00",
+            "updated_at": "2025-11-19 20:31:25",
+            "search_count": 3
+        },
+        {
+            "id": 6,
+            "name": "Sitinurhaliza",
+            "email": "siti@donasi.local",
+            "email_verified_at": null,
+            "password": "$2y$12$juNYagQJ3N0I6KTrN\/OFn.22TNSnj8q1xGjsNj6eKVjc9PDXcSfdO",
+            "role_id": 3,
+            "status": "aktif",
+            "remember_token": null,
+            "created_at": "2025-10-10 09:00:00",
+            "updated_at": "2025-11-19 20:31:26",
+            "search_count": 4
+        },
+        {
+            "id": 7,
+            "name": "Budisetiawan",
+            "email": "budi@donasi.local",
+            "email_verified_at": null,
+            "password": "$2y$12$UyIR3ZQEcAkarf.2CoRTz.o6tI14hjkodCqW.\/hWe\/SfYHG8udRyu",
+            "role_id": 3,
+            "status": "aktif",
+            "remember_token": null,
+            "created_at": "2025-10-10 09:00:00",
+            "updated_at": "2025-11-19 20:31:25",
+            "search_count": 2
+        },
+        {
+            "id": 8,
+            "name": "Rinahandayani",
+            "email": "rina@donasi.local",
+            "email_verified_at": null,
+            "password": "$2y$12$Q7zdCe9lV59B\/r\/3Y5yAoe1pFykArTdms59YN5pjCIyL43.yrTLgq",
+            "role_id": 3,
+            "status": "aktif",
+            "remember_token": null,
+            "created_at": "2025-10-10 09:00:00",
+            "updated_at": "2025-10-19 15:09:25",
+            "search_count": 0
+        },
+        {
+            "id": 10,
+            "name": "usernew",
+            "email": "userbaru@donasi.local",
+            "email_verified_at": null,
+            "password": "$2y$12$5af3G5rRXHmbXRHw19NbPuoMyBcHIZa.kIAmAatiKPX2o9M\/rG6E6",
+            "role_id": 3,
+            "status": "aktif",
+            "remember_token": null,
+            "created_at": "2025-10-19 02:59:01",
+            "updated_at": "2025-11-19 20:31:25",
+            "search_count": 2
+        },
+        {
+            "id": 11,
+            "name": "usertesAdmin",
+            "email": "admin@donasi.com",
+            "email_verified_at": null,
+            "password": "$2y$12$S8g9IRQzAF5jkJBxX.XxOe4BJcOg7YAahCLTTzT7cwjp6QSDzLVeO",
+            "role_id": 2,
+            "status": "aktif",
+            "remember_token": null,
+            "created_at": "2025-10-22 01:59:38",
+            "updated_at": "2025-10-22 06:35:26",
+            "search_count": 0
+        }
+    ],
+    "user_profiles": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "foto": "profile_photos\/8FgvmVXBJIKXmsRpdfylmXnGRqlM4Isu7eiEV6xE.jpg",
+            "nama_lengkap": "Zaky ian Z",
+            "jenis_kelamin": "Laki-laki",
+            "tanggal_lahir": "1992-07-30",
+            "no_telepon": "08985235880",
+            "alamat": "Jl.Haji Jiban RT 004 \/ RW 03, Kelurahan Jatimelati, Kecamatan Pondok melati, Kota Bekasi, Jawa barat 17415, indonesia",
+            "pekerjaan": "guru",
+            "created_at": "2025-10-17 16:02:44",
+            "updated_at": "2025-10-19 17:47:18"
+        },
+        {
+            "id": 2,
+            "user_id": 3,
+            "foto": null,
+            "nama_lengkap": "donatur Contoh",
+            "jenis_kelamin": "Laki-laki",
+            "tanggal_lahir": "1992-07-30",
+            "no_telepon": "089695402117",
+            "alamat": "Perumahan Taman Karang Bahagia Blok B5 No 8 Jl. Raya Sukatani KM. 9, Desa Karang Sentosa, Kec. Karang Bahagia Cikarang Utara Jawa Barat 17530",
+            "pekerjaan": null,
+            "created_at": "2025-10-17 16:02:44",
+            "updated_at": "2025-10-19 05:33:32"
+        },
+        {
+            "id": 3,
+            "user_id": 5,
+            "foto": "profile_photos\/880KJNZZkiVABnb58OQBTciLC4YYooL0gRE6H4OM.jpg",
+            "nama_lengkap": "Andi donatur contoh",
+            "jenis_kelamin": "Laki-laki",
+            "tanggal_lahir": "2025-10-01",
+            "no_telepon": "089852356677",
+            "alamat": null,
+            "pekerjaan": null,
+            "created_at": "2025-10-17 16:02:44",
+            "updated_at": "2025-10-19 09:35:35"
+        },
+        {
+            "id": 4,
+            "user_id": 6,
+            "foto": null,
+            "nama_lengkap": null,
+            "jenis_kelamin": null,
+            "tanggal_lahir": null,
+            "no_telepon": null,
+            "alamat": null,
+            "pekerjaan": null,
+            "created_at": "2025-10-17 16:02:44",
+            "updated_at": "2025-10-17 16:02:44"
+        },
+        {
+            "id": 5,
+            "user_id": 7,
+            "foto": null,
+            "nama_lengkap": null,
+            "jenis_kelamin": null,
+            "tanggal_lahir": null,
+            "no_telepon": null,
+            "alamat": null,
+            "pekerjaan": null,
+            "created_at": "2025-10-17 16:02:44",
+            "updated_at": "2025-10-17 16:02:44"
+        },
+        {
+            "id": 6,
+            "user_id": 8,
+            "foto": null,
+            "nama_lengkap": null,
+            "jenis_kelamin": null,
+            "tanggal_lahir": null,
+            "no_telepon": null,
+            "alamat": null,
+            "pekerjaan": null,
+            "created_at": "2025-10-17 16:02:44",
+            "updated_at": "2025-10-17 16:02:44"
+        },
+        {
+            "id": 9,
+            "user_id": 10,
+            "foto": "profile_photos\/profile_1760895440.png",
+            "nama_lengkap": "aisyah kirana",
+            "jenis_kelamin": "Perempuan",
+            "tanggal_lahir": "2020-03-15",
+            "no_telepon": "+6289695402117",
+            "alamat": "Perumahan Taman Karang Bahagia Blok B5 No 8 Jl. Raya Sukatani KM. 9, Desa Karang Sentosa, Kec. Karang Bahagia Cikarang Utara Jawa Barat 17530",
+            "pekerjaan": null,
+            "created_at": null,
+            "updated_at": "2025-10-19 17:39:03"
+        },
+        {
+            "id": 10,
+            "user_id": 11,
+            "foto": null,
+            "nama_lengkap": "Admin",
+            "jenis_kelamin": "Laki-laki",
+            "tanggal_lahir": "2021-10-26",
+            "no_telepon": "0989776655667",
+            "alamat": null,
+            "pekerjaan": null,
+            "created_at": "2025-10-22 01:59:38",
+            "updated_at": "2025-10-26 01:38:01"
+        }
+    ],
+    "settings": [
+        {
+            "id": 1,
+            "key": "site_title",
+            "value": "Sistem Donasi Arrahman",
+            "type": "text",
+            "created_at": "2025-10-27 21:54:46",
+            "updated_at": "2025-11-13 23:07:31"
+        },
+        {
+            "id": 2,
+            "key": "favicon",
+            "value": "uploads\/settings\/favicon\/1763010006_3FYPwWTUB0.png",
+            "type": "file",
+            "created_at": "2025-10-27 21:54:51",
+            "updated_at": "2025-11-13 12:00:09"
+        },
+        {
+            "id": 3,
+            "key": "logo",
+            "value": "uploads\/settings\/logo\/1763010009_r8FVO9nBcR.png",
+            "type": "file",
+            "created_at": "2025-10-27 21:54:51",
+            "updated_at": "2025-11-13 12:00:09"
+        },
+        {
+            "id": 4,
+            "key": "site_description",
+            "value": "Platform donasi untuk program ZISWAF (Zakat, Infaq, Sodaqoh dan Wakaf) dari yayasan Ar-Rahman atau Ar-Rahman Islamic Center. Ini adalah wujud dari komitmen kami dalam transparansi aliran dana donasi.",
+            "type": "text",
+            "created_at": "2025-11-13 13:26:49",
+            "updated_at": "2025-11-13 13:26:49"
+        },
+        {
+            "id": 8,
+            "key": "google_maps_embed",
+            "value": "<iframe src=\"https:\/\/www.google.com\/maps\/embed?pb=!1m18!1m12!1m3!1d253817.05829135116!2d106.62374639453127!3d-6.277988500000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698d46de0e8ec3%3A0x2e5334b0f3402b37!2sAr%20Rahman%20Islamic%20Center!5e0!3m2!1sen!2sid!4v1763146340054!5m2!1sen!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"><\/iframe>",
+            "type": "text",
+            "created_at": "2025-11-13 14:14:52",
+            "updated_at": "2025-11-15 01:52:35"
+        },
+        {
+            "id": 9,
+            "key": "office_hours",
+            "value": "[{\"start_day\":\"Senin\",\"end_day\":\"Jumat\",\"start_time\":\"09:00\",\"end_time\":\"17:00\",\"timezone\":\"WIB\"},{\"start_day\":\"Sabtu\",\"end_day\":\"Sabtu\",\"start_time\":\"09:00\",\"end_time\":\"12:00\",\"timezone\":\"WIB\"}]",
+            "type": "text",
+            "created_at": "2025-11-13 15:49:25",
+            "updated_at": "2025-11-13 16:18:37"
+        },
+        {
+            "id": 37,
+            "key": "office_address_1",
+            "value": "Jl. H. Taqwa No.23, RT.004\/RW.009, Jatimakmur, Kec. Pd. Gede, Kota Bekasi, Jawa Barat 17413",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:52",
+            "updated_at": "2025-11-15 13:35:52"
+        },
+        {
+            "id": 38,
+            "key": "office_address_primary",
+            "value": "1",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:52",
+            "updated_at": "2025-11-15 13:35:52"
+        },
+        {
+            "id": 39,
+            "key": "office_phone_1",
+            "value": "6213333333333",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:52",
+            "updated_at": "2025-11-15 13:35:52"
+        },
+        {
+            "id": 40,
+            "key": "office_phone_primary",
+            "value": "1",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:52",
+            "updated_at": "2025-11-15 13:35:52"
+        },
+        {
+            "id": 41,
+            "key": "office_email_1",
+            "value": "infoooo@arrahmanic.org",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:53",
+            "updated_at": "2025-11-15 13:35:53"
+        },
+        {
+            "id": 42,
+            "key": "office_email_primary",
+            "value": "1",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:53",
+            "updated_at": "2025-11-15 13:35:53"
+        },
+        {
+            "id": 43,
+            "key": "contact_display_addresss",
+            "value": "all",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:53",
+            "updated_at": "2025-11-17 10:55:34"
+        },
+        {
+            "id": 44,
+            "key": "contact_display_phones",
+            "value": "all",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:53",
+            "updated_at": "2025-11-17 10:55:34"
+        },
+        {
+            "id": 45,
+            "key": "contact_display_emails",
+            "value": "all",
+            "type": "text",
+            "created_at": "2025-11-15 13:35:53",
+            "updated_at": "2025-11-17 10:55:34"
+        },
+        {
+            "id": 46,
+            "key": "office_address_2",
+            "value": "Rukan Hexa Green Kalimalang, Jl. Inspeksi Kalimalang C8-C9, Jatimulya, Kec. Tambun Sel., Kabupaten Bekasi, Jawa Barat 17510",
+            "type": "text",
+            "created_at": "2025-11-15 13:36:43",
+            "updated_at": "2025-11-15 13:36:43"
+        },
+        {
+            "id": 47,
+            "key": "office_phone_2",
+            "value": "6281283612352",
+            "type": "text",
+            "created_at": "2025-11-15 13:36:43",
+            "updated_at": "2025-11-15 13:36:43"
+        },
+        {
+            "id": 48,
+            "key": "office_email_2",
+            "value": "ptdarrahman.bekasi@gmail.com",
+            "type": "text",
+            "created_at": "2025-11-15 13:36:44",
+            "updated_at": "2025-11-15 13:36:44"
+        }
+    ],
+    "social_media": [
+        {
+            "id": 1,
+            "platform_name": "Facebook",
+            "url": "https:\/\/www.facebook.com\/",
+            "icon_class": "bi bi-facebook",
+            "is_active": 1,
+            "order": 1,
+            "created_at": "2025-11-17 13:34:18",
+            "updated_at": "2025-11-17 13:34:18"
+        },
+        {
+            "id": 2,
+            "platform_name": "Instagram",
+            "url": "https:\/\/www.instagram.com\/",
+            "icon_class": "bi bi-instagram",
+            "is_active": 1,
+            "order": 2,
+            "created_at": "2025-11-17 13:44:18",
+            "updated_at": "2025-11-17 13:44:18"
+        },
+        {
+            "id": 3,
+            "platform_name": "Youtube",
+            "url": "https:\/\/youtube.com\/",
+            "icon_class": "bi bi-youtube",
+            "is_active": 1,
+            "order": 3,
+            "created_at": "2025-11-17 13:44:57",
+            "updated_at": "2025-11-17 13:44:57"
+        },
+        {
+            "id": 4,
+            "platform_name": "TikTok",
+            "url": "https:\/\/www.tiktok.com\/",
+            "icon_class": "bi bi-tiktok",
+            "is_active": 1,
+            "order": 4,
+            "created_at": "2025-11-17 13:45:37",
+            "updated_at": "2025-11-17 13:45:37"
+        },
+        {
+            "id": 5,
+            "platform_name": "WhatsApp",
+            "url": "https:\/\/api.whatsapp.com\/send\/?phone=628985235880&text&type=phone_number&app_absent=0",
+            "icon_class": "bi bi-whatsapp",
+            "is_active": 1,
+            "order": 5,
+            "created_at": "2025-11-17 13:46:42",
+            "updated_at": "2025-11-17 13:46:42"
+        },
+        {
+            "id": 6,
+            "platform_name": "Discord",
+            "url": "https:\/\/www.discord.com\/",
+            "icon_class": "bi bi-discord",
+            "is_active": 1,
+            "order": 6,
+            "created_at": "2025-11-17 14:24:51",
+            "updated_at": "2025-11-17 14:24:51"
+        },
+        {
+            "id": 7,
+            "platform_name": "X",
+            "url": "https:\/\/www.x.com\/",
+            "icon_class": "bi bi-twitter-x",
+            "is_active": 0,
+            "order": 7,
+            "created_at": "2025-11-17 14:26:04",
+            "updated_at": "2025-11-17 14:27:43"
+        },
+        {
+            "id": 8,
+            "platform_name": "Telegram",
+            "url": "https:\/\/www.telegram.com\/",
+            "icon_class": "bi bi-telegram",
+            "is_active": 0,
+            "order": 8,
+            "created_at": "2025-11-17 14:26:41",
+            "updated_at": "2025-11-17 14:27:32"
+        }
+    ],
+    "teams": [
+        {
+            "id": 1,
+            "photo": "uploads\/teams\/1762926136_c5pA0M6bt1.png",
+            "name": "ian",
+            "position": "Superadmin",
+            "description": "website developer - IT supervisor - Pembuat aplikasi yayasannn",
+            "order": 1,
+            "is_active": 1,
+            "created_at": "2025-11-12 12:42:16",
+            "updated_at": "2025-11-17 12:41:00"
+        },
+        {
+            "id": 2,
+            "photo": "uploads\/teams\/1762928073_JKfZJAn1CM.png",
+            "name": "Aisyah Kirana",
+            "position": "Bendahara",
+            "description": "Bendahara yang bertugas mengelolan dan mencatat keuangan",
+            "order": 2,
+            "is_active": 1,
+            "created_at": "2025-11-12 13:14:34",
+            "updated_at": "2025-11-17 12:32:27"
+        }
+    ],
+    "testimonials": [
+        {
+            "id": 1,
+            "photo": "uploads\/testimonials\/1763054980_T5pgChbvnj.png",
+            "name": "Mamy Poko Kuning",
+            "role": "Donatur",
+            "rating": 5,
+            "comment": "Berdonasi disini sangat mudah dan menyenangkan, transparansi jelas, dan kami bisa melihat perkembangannya secara realtime. Mantap",
+            "order": 1,
+            "is_active": 1,
+            "created_at": "2025-11-14 00:29:44",
+            "updated_at": "2025-11-17 12:41:23"
+        },
+        {
+            "id": 3,
+            "photo": "uploads\/testimonials\/1763055066_cBDRdbp6OX.jpeg",
+            "name": "Astronot Nyasar",
+            "role": "Donatur",
+            "rating": 5,
+            "comment": "Habis dari luar angkasa, tiba-tiba dapet uang banyak, bingung mau dikemanakan, saya donasi kesini saja, semoga berkah",
+            "order": 2,
+            "is_active": 1,
+            "created_at": "2025-11-14 00:31:07",
+            "updated_at": "2025-11-14 00:31:07"
+        },
+        {
+            "id": 4,
+            "photo": "uploads\/testimonials\/1763055130_hHP3f4QMX6.jpeg",
+            "name": "Polisi Jujur",
+            "role": "Donatur",
+            "rating": 5,
+            "comment": "Sejauh ini, saya selalu berusaha yang terbaik menjadi polisi yang amanah. berdonasi adalah bentuk pengabdian lanjutan saya pada masyarakat.",
+            "order": 3,
+            "is_active": 1,
+            "created_at": "2025-11-14 00:32:10",
+            "updated_at": "2025-11-14 00:32:10"
+        },
+        {
+            "id": 5,
+            "photo": "uploads\/testimonials\/1763055461_cFbkr3QzPH.jpeg",
+            "name": "Bussinessman",
+            "role": "Donatur",
+            "rating": 5,
+            "comment": "Tentu saja sebagai Bussiness man yang sukses, marilah kita menyisihkan harta kita untuk orang yang membutuhkan.",
+            "order": 4,
+            "is_active": 1,
+            "created_at": "2025-11-14 00:37:41",
+            "updated_at": "2025-11-14 00:37:41"
+        },
+        {
+            "id": 6,
+            "photo": "uploads\/testimonials\/1763056269_h05mstoKy9.jpeg",
+            "name": "Si Kembar India",
+            "role": "Donatur",
+            "rating": 3,
+            "comment": "Kami senang berdonasi disini, namun itu membuat kami jadi tidak bisa pulang kampung. Antara menyesal dan tidak yasudahlah tidak apa-apa.",
+            "order": 5,
+            "is_active": 1,
+            "created_at": "2025-11-14 00:51:09",
+            "updated_at": "2025-11-14 00:51:09"
+        }
+    ]
+}

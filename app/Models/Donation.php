@@ -41,13 +41,9 @@ class Donation extends Model
 
     protected static function booted()
     {
+        // Kirim notifikasi saat status berubah menjadi terverifikasi
         static::updated(function ($donation) {
             if ($donation->wasChanged('status') && $donation->status === 'terverifikasi') {
-                $program = $donation->program;
-                $program->dana_terkumpul += $donation->nominal;
-                $program->save();
-
-                // Create notification for user
                 Notification::create([
                     'user_id' => $donation->user_id,
                     'judul' => 'Donasi Terverifikasi',
@@ -55,6 +51,32 @@ class Donation extends Model
                     'status_baca' => false,
                 ]);
             }
+
+            // Notifikasi jika status berubah menjadi ditolak
+            if ($donation->wasChanged('status') && $donation->status === 'ditolak') {
+                Notification::create([
+                    'user_id' => $donation->user_id,
+                    'judul' => 'Donasi Ditolak',
+                    'isi' => 'Donasi Anda sebesar Rp ' . number_format($donation->nominal, 0, ',', '.') . ' pada program ' . $donation->program->nama_program . ' ditolak. Silakan hubungi admin untuk informasi lebih lanjut.',
+                    'status_baca' => false,
+                ]);
+            }
         });
+    }
+
+    /**
+     * Scope untuk donasi terverifikasi
+     */
+    public function scopeVerified($query)
+    {
+        return $query->where('status', 'terverifikasi');
+    }
+
+    /**
+     * Scope untuk donasi pending
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', 'menunggu');
     }
 }

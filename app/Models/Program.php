@@ -33,23 +33,26 @@ class Program extends Model
         return $this->hasMany(Donation::class);
     }
 
-    public function beneficiaries()
-    {
-        return $this->hasManyThrough(
-            Beneficiary::class, // Model target
-            Distribution::class, // Model perantara
-            'program_id', // Foreign key di tabel distributions
-            'id', // Local key di tabel programs
-            'id', // Local key di tabel beneficiaries
-            'beneficiary_id' // Foreign key di tabel distributions
-        );
-    }
-
     public function distributions()
     {
         return $this->hasMany(Distribution::class);
     }
 
+    public function beneficiaries()
+    {
+        return $this->hasManyThrough(
+            Beneficiary::class,
+            Distribution::class,
+            'program_id',
+            'id',
+            'id',
+            'beneficiary_id'
+        );
+    }
+
+    /**
+     * Get total verified donations
+     */
     public function getTotalDonasiAttribute()
     {
         return $this->donations()
@@ -57,11 +60,56 @@ class Program extends Model
             ->sum('nominal');
     }
 
+    /**
+     * Get total distributions
+     */
+    public function getTotalDistribusiAttribute()
+    {
+        return $this->distributions()
+            ->sum('nominal_disalurkan');
+    }
+
+    /**
+     * Get actual available funds (should match dana_terkumpul)
+     * Formula: Total Donations - Total Distributions
+     */
+    public function getDanatersediaAttribute()
+    {
+        return $this->total_donasi - $this->total_distribusi;
+    }
+
+    /**
+     * Get progress percentage
+     */
     public function getProgressPercentageAttribute()
     {
         $totalDonasi = $this->total_donasi;
         return $this->target_dana > 0
             ? min(100, ($totalDonasi / $this->target_dana) * 100)
             : 0;
+    }
+
+    /**
+     * Check if program has sufficient funds for distribution
+     */
+    public function hasSufficientFunds($amount)
+    {
+        return $this->dana_terkumpul >= $amount;
+    }
+
+    /**
+     * Scope untuk program aktif
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'aktif');
+    }
+
+    /**
+     * Scope untuk program dengan target tercapai
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereRaw('dana_terkumpul >= target_dana');
     }
 }

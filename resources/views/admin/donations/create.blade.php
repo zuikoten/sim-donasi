@@ -24,7 +24,6 @@
                         @enderror
                     </div>
 
-
                     <!-- PILIH PROGRAM -->
                     <div class="mb-4">
                         <label for="program_id" class="form-label fw-semibold">Program Donasi</label>
@@ -58,10 +57,19 @@
                         <select class="form-select select2 @error('metode_pembayaran') is-invalid @enderror"
                             name="metode_pembayaran" id="metode_pembayaran">
                             <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
-                            <option value="Uang Tunai">Uang Tunai</option>
-                            <option value="Transfer Bank">Transfer Bank</option>
-                            <option value="QRIS">QRIS</option>
-                            <option value="E-Wallet">E-Wallet</option>
+                            <option value="Uang Tunai" {{ old('metode_pembayaran') == 'Uang Tunai' ? 'selected' : '' }}>
+                                Uang Tunai
+                            </option>
+                            <option value="Transfer Bank"
+                                {{ old('metode_pembayaran') == 'Transfer Bank' ? 'selected' : '' }}>
+                                Transfer Bank
+                            </option>
+                            <option value="QRIS" {{ old('metode_pembayaran') == 'QRIS' ? 'selected' : '' }}>
+                                QRIS
+                            </option>
+                            <option value="E-Wallet" {{ old('metode_pembayaran') == 'E-Wallet' ? 'selected' : '' }}>
+                                E-Wallet
+                            </option>
                         </select>
                         @error('metode_pembayaran')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -72,18 +80,29 @@
                     <div class="mb-4">
                         <label for="bank_account_id" class="form-label fw-semibold">Rekening Bank Tujuan</label>
                         <select class="form-select select2 @error('bank_account_id') is-invalid @enderror"
-                            id="bank_account_id" name="bank_account_id">
-                            <option value="" selected disabled>-- Pilih Rekening Bank --</option>
+                            id="bank_account_id" name="bank_account_id" disabled>
+                            <option value="" selected disabled>-- Pilih Metode Pembayaran Dulu --</option>
+
+                            @if ($kasTunai)
+                                <option value="{{ $kasTunai->id }}" data-type="cash"
+                                    {{ old('bank_account_id') == $kasTunai->id ? 'selected' : '' }}>
+                                    💵 {{ $kasTunai->bank_name }}
+                                </option>
+                            @endif
+
                             @foreach ($bankAccounts as $bank)
-                                <option value="{{ $bank->id }}"
+                                <option value="{{ $bank->id }}" data-type="{{ $bank->account_type ?? 'bank' }}"
                                     {{ old('bank_account_id') == $bank->id ? 'selected' : '' }}>
-                                    {{ $bank->bank_name }} - {{ $bank->account_number }} ({{ $bank->account_holder }})
+                                    🏦 {{ $bank->bank_name }} - {{ $bank->account_number }} ({{ $bank->account_holder }})
                                 </option>
                             @endforeach
                         </select>
                         @error('bank_account_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <small class="form-text text-muted" id="rekening-hint">
+                            Pilih metode pembayaran terlebih dahulu
+                        </small>
                     </div>
 
                     <!-- STATUS -->
@@ -105,7 +124,7 @@
                         <label for="keterangan_tambahan" class="form-label fw-semibold">Keterangan
                             <em>(Opsional)</em></label>
                         <textarea class="form-control" name="keterangan_tambahan" rows="2"
-                            placeholder="Tambahkan catatan atau keterangan tambahan...">{{ old('keterangan_tambahan') }}</textarea>
+                            placeholder="Contoh: Ditransfer via Bank BCA an. Muhammad Rizki">{{ old('keterangan_tambahan') }}</textarea>
                     </div>
 
                     <!-- BUKTI PEMBAYARAN -->
@@ -159,6 +178,11 @@
         .card {
             border-radius: 1rem;
         }
+
+        /* Style untuk rekening yang auto-selected */
+        #bank_account_id.auto-selected {
+            background-color: #e9ecef;
+        }
     </style>
 @endpush
 
@@ -169,7 +193,8 @@
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            // Initialize Select2 untuk Donatur (AJAX)
             $('#user_id').select2({
                 theme: 'bootstrap-5',
                 width: '100%',
@@ -181,23 +206,160 @@
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
-                        console.log('Searching for:', params.term); // DEBUG
+                        console.log('Searching for:', params.term);
                         return {
                             term: params.term || '',
                         };
                     },
                     processResults: function(data) {
-                        console.log('Results:', data); // DEBUG
+                        console.log('Results:', data);
                         return {
                             results: data
                         };
                     },
                     error: function(xhr, status, error) {
-                        console.error('Ajax error:', xhr.responseText); // DEBUG
+                        console.error('Ajax error:', xhr.responseText);
                     },
                     cache: true
                 }
             });
+
+            // Initialize Select2 untuk Program
+            $('#program_id').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            // Initialize Select2 untuk Metode Pembayaran
+            $('#metode_pembayaran').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            // Initialize Select2 untuk Status
+            $('#status').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            // Konstanta
+            const kasTunaiId = {{ $kasTunai ? $kasTunai->id : 'null' }};
+            const $metodePembayaran = $('#metode_pembayaran');
+            const $bankAccountSelect = $('#bank_account_id');
+            const $rekeningHint = $('#rekening-hint');
+
+            // Function untuk init Select2 dengan filter
+            function initBankAccountSelect2(showCashOnly = false) {
+                // Destroy dulu jika sudah ada
+                if ($bankAccountSelect.hasClass('select2-hidden-accessible')) {
+                    $bankAccountSelect.select2('destroy');
+                }
+
+                // Init Select2 dengan templateResult untuk filter
+                $bankAccountSelect.select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    templateResult: function(option) {
+                        if (!option.id) {
+                            return option.text; // Placeholder
+                        }
+
+                        const $option = $(option.element);
+                        const dataType = $option.data('type');
+
+                        // Filter berdasarkan metode pembayaran
+                        if (showCashOnly) {
+                            // Hanya tampilkan Kas Tunai
+                            if (dataType !== 'cash') {
+                                return null; // Hide option
+                            }
+                        } else {
+                            // Sembunyikan Kas Tunai, tampilkan bank
+                            if (dataType === 'cash') {
+                                return null; // Hide option
+                            }
+                        }
+
+                        return option.text;
+                    }
+                });
+            }
+
+            // Function untuk update rekening dropdown
+            function updateRekeningDropdown() {
+                const metode = $metodePembayaran.val();
+
+                // Reset
+                if (!metode) {
+                    $bankAccountSelect.prop('disabled', true);
+                    $bankAccountSelect.val('');
+                    $bankAccountSelect.removeClass('auto-selected');
+                    $rekeningHint.text('Pilih metode pembayaran terlebih dahulu')
+                        .removeClass('text-success text-warning')
+                        .addClass('text-muted');
+
+                    // Init Select2 tanpa options
+                    if ($bankAccountSelect.hasClass('select2-hidden-accessible')) {
+                        $bankAccountSelect.select2('destroy');
+                    }
+                    $bankAccountSelect.select2({
+                        theme: 'bootstrap-5',
+                        width: '100%'
+                    });
+                    return;
+                }
+
+                // Enable dropdown
+                $bankAccountSelect.prop('disabled', false);
+
+                // Handle berdasarkan metode
+                if (metode === 'Uang Tunai') {
+                    if (kasTunaiId) {
+                        // Init Select2 - hanya tampilkan Kas Tunai
+                        initBankAccountSelect2(true);
+
+                        // Auto-select Kas Tunai
+                        $bankAccountSelect.val(kasTunaiId).trigger('change');
+                        $bankAccountSelect.addClass('auto-selected');
+                        $rekeningHint.text('✓ Otomatis dipilih: Kas Tunai')
+                            .removeClass('text-muted text-warning')
+                            .addClass('text-success');
+                    } else {
+                        alert('⚠️ Error: Data Kas Tunai tidak ditemukan dalam sistem.\nHubungi administrator.');
+                        $bankAccountSelect.prop('disabled', true);
+                    }
+                } else {
+                    // Metode lain (Transfer Bank, QRIS, E-Wallet)
+                    // Init Select2 - hanya tampilkan bank accounts
+                    initBankAccountSelect2(false);
+
+                    // Reset selection
+                    $bankAccountSelect.val('').trigger('change');
+                    $bankAccountSelect.removeClass('auto-selected');
+                    $rekeningHint.text('Pilih rekening bank tujuan')
+                        .removeClass('text-success text-warning')
+                        .addClass('text-muted');
+                }
+            }
+
+            // Event listener untuk perubahan metode pembayaran
+            $metodePembayaran.on('change', function() {
+                updateRekeningDropdown();
+            });
+
+            // Prevent user dari mengubah rekening jika metode = Uang Tunai
+            $bankAccountSelect.on('change', function() {
+                const metode = $metodePembayaran.val();
+                const selectedValue = $(this).val();
+
+                if (metode === 'Uang Tunai' && selectedValue != kasTunaiId) {
+                    alert('⚠️ Untuk metode Uang Tunai, rekening harus "Kas Tunai"');
+                    $(this).val(kasTunaiId).trigger('change');
+                }
+            });
+
+            // Trigger pada page load (untuk old input saat validation error)
+            updateRekeningDropdown();
         });
     </script>
 @endpush

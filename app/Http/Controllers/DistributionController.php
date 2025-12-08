@@ -6,6 +6,7 @@ use App\Models\Distribution;
 use App\Models\Beneficiary;
 use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DistributionController extends Controller
 {
@@ -24,7 +25,7 @@ class DistributionController extends Controller
         $sort = $request->input('sort', 'default');
 
         // Query dasar
-        $query = Distribution::query();
+        $query = Distribution::with(['beneficiary', 'program']);
 
         // Urutkan berdasarkan pilihan user
         switch ($sort) {
@@ -40,6 +41,8 @@ class DistributionController extends Controller
             case 'tgl_asc':
                 $query->orderBy('tanggal_penyaluran', 'asc');
                 break;
+            default:
+                $query->orderBy('created_at', 'desc');
         }
 
         // Jalankan pagination
@@ -65,26 +68,49 @@ class DistributionController extends Controller
 
     public function store(Request $request)
     {
+        $messages = [
+            'beneficiary_id.required' => 'Penerima manfaat wajib dipilih.',
+            'beneficiary_id.exists' => 'Penerima manfaat tidak valid.',
+            'program_id.required' => 'Program wajib dipilih.',
+            'program_id.exists' => 'Program tidak valid.',
+            'nominal_disalurkan.required' => 'Nominal penyaluran wajib diisi.',
+            'nominal_disalurkan.numeric' => 'Nominal harus berupa angka.',
+            'nominal_disalurkan.min' => 'Nominal minimal Rp 1.000.',
+            'tanggal_penyaluran.required' => 'Tanggal penyaluran wajib diisi.',
+            'tanggal_penyaluran.date' => 'Format tanggal tidak valid.',
+        ];
+
         $request->validate([
             'beneficiary_id' => 'required|exists:beneficiaries,id',
             'program_id' => 'required|exists:programs,id',
             'nominal_disalurkan' => 'required|numeric|min:1000',
             'tanggal_penyaluran' => 'required|date',
             'deskripsi' => 'nullable|string',
-        ]);
+        ], $messages);
 
-        // Check if program has enough funds
-        $program = Program::find($request->program_id);
-        if ($program->dana_terkumpul < $request->nominal_disalurkan) {
+        DB::beginTransaction();
+        try {
+            // Check if program has enough funds
+            $program = Program::lockForUpdate()->find($request->program_id);
+
+            if ($program->dana_terkumpul < $request->nominal_disalurkan) {
+                return redirect()->back()
+                    ->with('error', 'Dana program tidak mencukupi. Dana tersedia: Rp ' . number_format($program->dana_terkumpul, 0, ',', '.'))
+                    ->withInput();
+            }
+
+            // Create distribution - trigger akan otomatis mengurangi dana_terkumpul
+            Distribution::create($request->all());
+
+            DB::commit();
+            return redirect()->route('distributions.index')
+                ->with('success', 'Penyaluran donasi berhasil dicatat.');
+        } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()
-                ->with('error', 'Dana program tidak mencukupi untuk penyaluran ini.')
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
-
-        Distribution::create($request->all());
-
-        return redirect()->route('distributions.index')
-            ->with('success', 'Penyaluran donasi berhasil dicatat.');
     }
 
     public function show(Distribution $distribution)
@@ -102,47 +128,107 @@ class DistributionController extends Controller
 
     public function update(Request $request, Distribution $distribution)
     {
+        $messages = [
+            'beneficiary_id.required' => 'Penerima manfaat wajib dipilih.',
+            'beneficiary_id.exists' => 'Penerima manfaat tidak valid.',
+            'program_id.required' => 'Program wajib dipilih.',
+            'program_id.exists' => 'Program tidak valid.',
+            'nominal_disalurkan.required' => 'Nominal penyaluran wajib diisi.',
+            'nominal_disalurkan.numeric' => 'Nominal harus berupa angka.',
+            'nominal_disalurkan.min' => 'Nominal minimal Rp 1.000.',
+            'tanggal_penyaluran.required' => 'Tanggal penyaluran wajib diisi.',
+            'tanggal_penyaluran.date' => 'Format tanggal tidak valid.',
+        ];
+
         $request->validate([
             'beneficiary_id' => 'required|exists:beneficiaries,id',
             'program_id' => 'required|exists:programs,id',
             'nominal_disalurkan' => 'required|numeric|min:1000',
             'tanggal_penyaluran' => 'required|date',
             'deskripsi' => 'nullable|string',
-        ]);
+        ], $messages);
 
-        // Get old distribution amount
-        $oldAmount = $distribution->nominal_disalurkan;
-        $newAmount = $request->nominal_disalurkan;
-        $difference = $newAmount - $oldAmount;
+        DB::beginTransaction();
+        try {
+            $oldProgramId = $distribution->program_id;
+            $oldNominal = $distribution->nominal_disalurkan;
+            $newProgramId = $request->program_id;
+            $newNominal = $request->nominal_disalurkan;
 
-        // Check if program has enough funds for the difference
-        $program = Program::find($request->program_id);
-        if ($program->dana_terkumpul < $difference) {
+            // Validasi dana tersedia
+            if ($oldProgramId == $newProgramId) {
+                // Program sama, cek selisih nominal
+                $difference = $newNominal - $oldNominal;
+                if ($difference > 0) {
+                    $program = Program::lockForUpdate()->find($newProgramId);
+                    // Dana yang tersedia = dana_terkumpul + nominal lama (karena akan dikembalikan)
+                    $availableFunds = $program->dana_terkumpul + $oldNominal;
+
+                    if ($availableFunds < $newNominal) {
+                        return redirect()->back()
+                            ->with('error', 'Dana program tidak mencukupi. Dana tersedia: Rp ' . number_format($availableFunds, 0, ',', '.'))
+                            ->withInput();
+                    }
+                }
+            } else {
+                // Program berbeda, cek dana di program baru
+                $newProgram = Program::lockForUpdate()->find($newProgramId);
+                if ($newProgram->dana_terkumpul < $newNominal) {
+                    return redirect()->back()
+                        ->with('error', 'Dana program tujuan tidak mencukupi. Dana tersedia: Rp ' . number_format($newProgram->dana_terkumpul, 0, ',', '.'))
+                        ->withInput();
+                }
+            }
+
+            // Update distribution - trigger akan handle update dana_terkumpul
+            $distribution->update($request->all());
+
+            // Log perubahan
+            \Log::info('Distribution Updated', [
+                'distribution_id' => $distribution->id,
+                'admin_id' => auth()->id(),
+                'old_data' => [
+                    'program_id' => $oldProgramId,
+                    'nominal' => $oldNominal,
+                ],
+                'new_data' => [
+                    'program_id' => $newProgramId,
+                    'nominal' => $newNominal,
+                ]
+            ]);
+
+            DB::commit();
+            return redirect()->route('distributions.index')
+                ->with('success', 'Data penyaluran donasi berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()
-                ->with('error', 'Dana program tidak mencukupi untuk perubahan ini.')
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
-
-        $distribution->update($request->all());
-
-        // Update program funds
-        $program->dana_terkumpul -= $difference;
-        $program->save();
-
-        return redirect()->route('distributions.index')
-            ->with('success', 'Data penyaluran donasi berhasil diperbarui.');
     }
 
     public function destroy(Distribution $distribution)
     {
-        // Return funds to program
-        $program = $distribution->program;
-        $program->dana_terkumpul += $distribution->nominal_disalurkan;
-        $program->save();
+        DB::beginTransaction();
+        try {
+            // Log sebelum delete
+            \Log::info('Distribution Deleted', [
+                'distribution_id' => $distribution->id,
+                'admin_id' => auth()->id(),
+                'data' => $distribution->toArray()
+            ]);
 
-        $distribution->delete();
+            // Delete distribution - trigger akan otomatis mengembalikan dana
+            $distribution->delete();
 
-        return redirect()->route('distributions.index')
-            ->with('success', 'Data penyaluran donasi berhasil dihapus.');
+            DB::commit();
+            return redirect()->route('distributions.index')
+                ->with('success', 'Data penyaluran donasi berhasil dihapus dan dana dikembalikan ke program.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
