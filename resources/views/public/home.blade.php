@@ -170,7 +170,7 @@
                                         @if ($program->donations_count > 0)
                                             <span class="badge badge-donors">
                                                 <i class="bi bi-people-fill me-1"></i>{{ $program->donations_count }}
-                                                Donatur
+                                                Donasi
                                             </span>
                                         @endif
                                     </div>

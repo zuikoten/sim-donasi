@@ -672,8 +672,13 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card program-card">
                             <div class="overflow-hidden">
-                                <img src="https://picsum.photos/seed/{{ $relatedProgram->id }}/400/250.jpg"
-                                    class="card-img-top" alt="{{ $relatedProgram->nama_program }}">
+                                @if ($program->gambar)
+                                    <img src="{{ Storage::url($relatedProgram->gambar) }}" class="card-img-top"
+                                        alt="{{ $relatedProgram->nama_program }}">
+                                @else
+                                    <img src="https://picsum.photos/seed/{{ $relatedProgram->id }}/400/250.jpg"
+                                        class="card-img-top" alt="{{ $relatedProgram->nama_program }}">
+                                @endif
                             </div>
                             <div class="card-body d-flex flex-column">
                                 <span class="badge bg-primary mb-2 align-self-start">

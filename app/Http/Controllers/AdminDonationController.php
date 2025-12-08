@@ -104,7 +104,7 @@ class AdminDonationController extends Controller
             $donation->save();
 
             DB::commit();
-            return redirect()->route('admin.donations.index')
+            return redirect()->route('donations.index')
                 ->with('success', 'Donasi berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
