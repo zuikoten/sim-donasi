@@ -101,6 +101,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/donasi', [ReportController::class, 'donations'])->name('donations');
         Route::get('/penyaluran', [ReportController::class, 'distributions'])->name('distributions');
         Route::get('/program', [ReportController::class, 'programs'])->name('programs');
+        Route::get('/bank-accounts', [ReportController::class, 'bankAccounts'])->name('bank-accounts');
 
         Route::get('/donasi/pdf', [ReportController::class, 'exportDonationsPDF'])->name('donations.pdf');
         Route::get('/donasi/excel', [ReportController::class, 'exportDonationsExcel'])->name('donations.excel');
@@ -108,6 +109,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/penyaluran/excel', [ReportController::class, 'exportDistributionsExcel'])->name('distributions.excel');
         Route::get('/program/pdf', [ReportController::class, 'exportProgramsPDF'])->name('programs.pdf');
         Route::get('/program/excel', [ReportController::class, 'exportProgramsExcel'])->name('programs.excel');
+        Route::get('/bank-accounts/pdf', [ReportController::class, 'exportBankAccountsPDF'])->name('bank-accounts.pdf');
+        Route::get('/bank-accounts/excel', [ReportController::class, 'exportBankAccountsExcel'])->name('bank-accounts.excel');
     });
 
     // Users (Superadmin or admin only)

@@ -48,6 +48,12 @@
                                 <i class="bi bi-circle"></i> Laporan Program
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('laporan/bank-accounts*') ? 'active' : '' }}"
+                                href="{{ route('reports.bank-accounts') }}">
+                                <i class="bi bi-circle"></i> Laporan Rekening Bank
+                            </a>
+                        </li>
 
                     </ul>
                 </div>

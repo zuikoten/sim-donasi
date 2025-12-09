@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Donation;
 use App\Models\Program;
 use App\Models\Distribution;
+use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -495,5 +496,219 @@ class ReportController extends Controller
         }
 
         return $programs;
+    }
+    /**
+     * Laporan Penerimaan Per Rekening Bank
+     */
+    public function bankAccounts(Request $request)
+    {
+        // Filter waktu
+        $timeFilter = $request->input('time_filter', 'bulan ini');
+
+        // Filter bank account
+        $bankAccountId = $request->input('bank_account_id');
+
+        // Filter status (default: terverifikasi)
+        $status = $request->input('status', 'terverifikasi');
+
+        // Query base untuk donations
+        $query = Donation::with(['user', 'program', 'bankAccount'])
+            ->where('status', $status);
+
+        // Apply time filter
+        $query = $this->applyTimeFilter($query, $timeFilter, 'created_at', $request);
+
+        // Filter by specific bank if selected
+        if ($bankAccountId && $bankAccountId != '') {
+            $query->where('bank_account_id', $bankAccountId);
+        }
+
+        // Get all donations for calculation
+        $donations = $query->get();
+
+        // Get all bank accounts (active)
+        $bankAccounts = BankAccount::where('is_active', true)
+            ->withCount(['donations' => function ($q) use ($timeFilter, $status, $request) {
+                $q->where('status', $status);
+                $this->applyTimeFilter($q, $timeFilter, 'created_at', $request);
+            }])
+            ->withSum(['donations as donations_sum_nominal' => function ($q) use ($timeFilter, $status, $request) {
+                $q->where('status', $status);
+                $this->applyTimeFilter($q, $timeFilter, 'created_at', $request);
+            }], 'nominal')
+            ->having('donations_count', '>', 0) // Only show banks with donations
+            ->orderBy('donations_sum_nominal', 'desc')
+            ->get();
+
+        // Calculate summary statistics
+        $totalPenerimaan = $donations->sum('nominal');
+        $totalTransaksi = $donations->count();
+        $totalBankAktif = $bankAccounts->count();
+        $rataRataPerTransaksi = $totalTransaksi > 0 ? $totalPenerimaan / $totalTransaksi : 0;
+
+        // Get top bank
+        $topBank = $bankAccounts->first();
+
+        // Breakdown per bank with programs
+        $bankBreakdown = $bankAccounts->map(function ($bank) use ($timeFilter, $status, $request) {
+            // Get donations for this bank
+            $bankDonations = Donation::where('bank_account_id', $bank->id)
+                ->where('status', $status);
+
+            $this->applyTimeFilter($bankDonations, $timeFilter, 'created_at', $request);
+
+            // Group by program
+            $programBreakdown = $bankDonations->get()->groupBy('program_id')->map(function ($donations, $programId) {
+                $program = Program::find($programId);
+                return [
+                    'program_name' => $program ? $program->nama_program : 'Unknown',
+                    'program_kategori' => $program ? $program->kategori : '-',
+                    'total' => $donations->sum('nominal'),
+                    'count' => $donations->count(),
+                    'average' => $donations->avg('nominal'),
+                ];
+            })->sortByDesc('total')->values();
+
+            return [
+                'bank' => $bank,
+                'total' => $bank->donations_sum_nominal ?? 0,
+                'count' => $bank->donations_count ?? 0,
+                'average' => $bank->donations_count > 0 ? ($bank->donations_sum_nominal / $bank->donations_count) : 0,
+                'programs' => $programBreakdown,
+            ];
+        });
+
+        // Chart data for pie chart
+        $chartData = $bankAccounts->map(function ($bank) {
+            return [
+                'label' => $bank->bank_name,
+                'value' => $bank->donations_sum_nominal ?? 0,
+            ];
+        });
+
+        // Pagination for transactions table (if needed)
+        $perPage = $request->input('perPage', 25);
+        $transactionsQuery = Donation::with(['user', 'program', 'bankAccount'])
+            ->where('status', $status);
+
+        $this->applyTimeFilter($transactionsQuery, $timeFilter, 'created_at', $request);
+
+        if ($bankAccountId && $bankAccountId != '') {
+            $transactionsQuery->where('bank_account_id', $bankAccountId);
+        }
+
+        $transactions = $transactionsQuery->orderBy('created_at', 'desc')->paginate($perPage);
+
+        // All bank accounts for dropdown
+        $allBankAccounts = BankAccount::where('is_active', true)->get();
+
+        return view('admin.reports.bank-accounts', compact(
+            'bankBreakdown',
+            'totalPenerimaan',
+            'totalTransaksi',
+            'totalBankAktif',
+            'rataRataPerTransaksi',
+            'topBank',
+            'chartData',
+            'transactions',
+            'allBankAccounts',
+            'timeFilter',
+            'bankAccountId',
+            'status',
+            'perPage'
+        ));
+    }
+
+    /**
+     * Export Bank Report to PDF
+     */
+    public function exportBankAccountsPDF(Request $request)
+    {
+        $timeFilter = $request->input('time_filter', 'bulan ini');
+        $bankAccountId = $request->input('bank_account_id');
+        $status = $request->input('status', 'terverifikasi');
+
+        // Query base
+        $query = Donation::with(['user', 'program', 'bankAccount'])
+            ->where('status', $status);
+
+        $query = $this->applyTimeFilter($query, $timeFilter, 'created_at', $request);
+
+        if ($bankAccountId && $bankAccountId != '') {
+            $query->where('bank_account_id', $bankAccountId);
+        }
+
+        $donations = $query->get();
+        $totalPenerimaan = $donations->sum('nominal');
+
+        // Get bank accounts with donations
+        $bankAccountsQuery = BankAccount::where('is_active', true);
+
+        if ($bankAccountId && $bankAccountId != '') {
+            $bankAccountsQuery->where('id', $bankAccountId);
+        }
+
+        $bankAccounts = $bankAccountsQuery->get();
+
+        // Breakdown per bank
+        $bankBreakdown = collect();
+
+        foreach ($bankAccounts as $bank) {
+            // Get donations for this specific bank with time filter
+            $bankDonationsQuery = Donation::where('bank_account_id', $bank->id)
+                ->where('status', $status)
+                ->with(['program']);
+
+            $this->applyTimeFilter($bankDonationsQuery, $timeFilter, 'created_at', $request);
+
+            $bankDonations = $bankDonationsQuery->get();
+
+            // Skip if no donations
+            if ($bankDonations->isEmpty()) {
+                continue;
+            }
+
+            // Group by program
+            $programBreakdown = $bankDonations->groupBy('program_id')->map(function ($donations, $programId) {
+                $program = Program::find($programId);
+                $total = $donations->sum('nominal');
+                $count = $donations->count();
+
+                return [
+                    'program_name' => $program ? $program->nama_program : 'Unknown',
+                    'program_kategori' => $program ? $program->kategori : '-',
+                    'total' => $total,
+                    'count' => $count,
+                    'average' => $count > 0 ? $total / $count : 0,
+                ];
+            })->sortByDesc('total')->values();
+
+            $totalBank = $bankDonations->sum('nominal');
+            $countBank = $bankDonations->count();
+
+            $bankBreakdown->push([
+                'bank' => $bank,
+                'total' => $totalBank,
+                'count' => $countBank,
+                'average' => $countBank > 0 ? $totalBank / $countBank : 0,
+                'programs' => $programBreakdown,
+            ]);
+        }
+
+        $pdf = PDF::loadView('admin.reports.pdf.bank-accounts', compact(
+            'bankBreakdown',
+            'totalPenerimaan',
+            'timeFilter'
+        ))->setPaper('a4', 'portrait');
+
+        return $pdf->download('laporan-penerimaan-per-rekening-' . date('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Export Bank Report to Excel
+     */
+    public function exportBankAccountsExcel(Request $request)
+    {
+        return Excel::download(new \App\Exports\BankAccountsExport($request), 'laporan-penerimaan-per-rekening-' . date('Y-m-d') . '.xlsx');
     }
 }
