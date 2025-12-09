@@ -206,7 +206,8 @@
     @if ($topBank)
         <div class="alert alert-info border-0 shadow-sm mb-4">
             <i class="bi bi-trophy-fill me-2"></i>
-            <strong>Bank Terbanyak:</strong> {{ $topBank->bank_name }} dengan total penerimaan
+            <strong>Bank Terbanyak:</strong> {{ $topBank->bank_name }} - {{ $topBank->account_holder }} dengan total
+            penerimaan
             <strong>Rp {{ number_format($topBank->donations_sum_nominal, 0, ',', '.') }}</strong>
         </div>
     @endif

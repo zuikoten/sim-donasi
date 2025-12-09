@@ -581,7 +581,7 @@ class ReportController extends Controller
         // Chart data for pie chart
         $chartData = $bankAccounts->map(function ($bank) {
             return [
-                'label' => $bank->bank_name,
+                'label' => $bank->bank_name . "\n" . ' (' . $bank->account_holder . ')',
                 'value' => $bank->donations_sum_nominal ?? 0,
             ];
         });
